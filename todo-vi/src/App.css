@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+#but-ui {
+  color: blueviolet;
+  border: 1px solid blueviolet;
+}
