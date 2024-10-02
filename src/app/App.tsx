@@ -10,13 +10,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {axiosBase} from "../shared/util/axios.ts";
 
 function App() {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [login, setLogin] = useState<boolean>(false)
     const [registration, setRegistration] = useState<boolean>(false)
-    //const [disabled, setDisabled] = useState<boolean>(false)
 
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -29,16 +29,7 @@ function App() {
 
     const checkLogin = async () => {
         try {
-            const response = await fetch(
-                'https://todos-be.vercel.app/auth/login',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({username, password}),
-                    headers: {['content-type']: 'application/json'}
-                }
-            )
-            const data = await response.json()
-            console.log(data)
+            const response = await axiosBase.post('auth/login', {username, password})
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             response.status === 201 ? setLogin(true) : setLogin(false);
@@ -56,16 +47,7 @@ function App() {
 
     const checkRegistration = async () => {
         try {
-            const response = await fetch(
-                'https://todos-be.vercel.app/auth/register',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({username, password}),
-                    headers: {['content-type']: 'application/json'}
-                }
-            )
-            const data = await response.json()
-            console.log(data)
+            const response = await axiosBase.post('auth/register', {username, password})
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             response.status === 201 ? setRegistration(true) : setRegistration(false);
@@ -86,18 +68,28 @@ function App() {
         setRegistration(false);
     }
 
+    const testToDo = [
+        {
+            _id: "string",
+            title: "string",
+            completed: false,
+            description: "string",
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        }
+    ]
+
     return (
         <>
             <ToolBar/>
-            {login ?
-                <Button
+            {login
+                ? <Button
                     variant="outlined"
                     fullWidth={true}
                     onClick={() => {
                         checkLogout()
                     }}>Logout</Button>
-                :
-                // Form "Sign Up"
+                : // Form "Sign Up"
                 <Container maxWidth="sm">
                     <Typography variant="h4" width={'100%'} textAlign={'center'}>
                         Sign up
@@ -149,14 +141,13 @@ function App() {
                             Login
                         </Button>
                         {/* Button Registration */}
-                        {!registration ?
-                            <Button variant="outlined" onClick={() => {
+                        {!registration
+                            ? <Button variant="outlined" onClick={() => {
                                 checkRegistration()
                             }}
                             >Registration
                             </Button>
-                            :
-                            <Button variant="outlined" disabled={true}
+                            : <Button variant="outlined" disabled={true}
                             >Success!
                             </Button>
                         }
