@@ -71,6 +71,8 @@ function App() {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             response.status === 201 ? setLogin(true) : setLogin(false);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            response.status === 200 ? setLogin(true) : setLogin(false);
 
             // Errors
             if (response.status === 401) {
@@ -78,6 +80,7 @@ function App() {
             } else if (response.status === 404) {
                 throw Error('Status Code 404\nThe page was not found.');
             }
+            console.log(response.status)
         } catch (e) {
             console.warn(e)
         }
