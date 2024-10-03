@@ -16,6 +16,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import Grid from '@mui/material/Grid2';
 
@@ -83,26 +85,18 @@ function App() {
 
     const testTodo = [
         {
-            _id: "string",
-            title: "string",
+            _id: "id1",
+            title: "title1",
             completed: false,
-            description: "string",
+            description: "description1",
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         },
         {
-            _id: "string2",
-            title: "string2",
-            completed: true,
-            description: "string2",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        },
-        {
-            _id: "string3",
-            title: "string3",
+            _id: "id2",
+            title: "title2",
             completed: false,
-            description: "string3",
+            description: "description2",
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         }
@@ -130,18 +124,21 @@ function App() {
                                         <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
                                             {index + 1}
                                         </Typography>
+                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
+                                            <Button>{<ModeEditOutlineIcon/>}</Button>
+                                            <Button>{<DeleteIcon/>}</Button>
+                                        </Typography>
+                                        <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
                                         <Typography variant="h5" component="div">
                                             {value.title}
                                         </Typography>
-                                        <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
                                         <Typography variant="body2">
                                             {value.description}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
                                         <div>
-                                            <Button size="small">{value.completed ? 'Success' : 'Todo'}</Button>
-                                            <Checkbox {...label} checked={value.completed} onChange={() => {
+                                            <Button size="small" onClick={() => {
                                                 setArrayTodo(arrayTodo.map((item, ind) => {
                                                     if (ind === index) {
                                                         return {...item, completed: !item.completed}
@@ -149,7 +146,8 @@ function App() {
                                                         return item
                                                     }
                                                 }))
-                                            }}/>
+                                            }}>{value.completed ? 'Success' : 'Todo'}
+                                                {<Checkbox {...label} checked={value.completed}/>}</Button>
                                         </div>
                                     </CardActions>
                                 </Card>
