@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {axiosBase, axiosLocal} from "../shared/util/axios.ts";
+import {axiosBase} from "../shared/util/axios.ts";
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -107,7 +107,16 @@ function App() {
     }
 
     const todoSave = () => {
-        console.log()
+        const add = {
+            _id: "id3",
+            title: title,
+            completed: false,
+            description: description,
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        }
+        const updateArrayTodo = [...testTodo, add]
+        setArrayTodo(updateArrayTodo)
     }
 
     return (
@@ -122,8 +131,9 @@ function App() {
                         onClick={() => {
                             checkLogout()
                         }}>Logout</Button>
-                    {/* Add Card */}
+                    {/* Form add ToDo */}
                     <Button onClick={() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                         addTodoView ? setAddTodoView(false) : setAddTodoView(true)
                     }}>{<AddIcon/>} Add Todo</Button>
                     {addTodoView ? <Container>
