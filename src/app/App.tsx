@@ -108,15 +108,25 @@ function App() {
 
     const todoSave = () => {
         const add = {
-            _id: "id3",
+            _id: `id${arrayTodo.length + 1}`,
             title: title,
             completed: false,
             description: description,
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         }
-        const updateArrayTodo = [...testTodo, add]
+        const updateArrayTodo = [...arrayTodo, add]
         setArrayTodo(updateArrayTodo)
+    }
+
+    const todoDelete = (del: string) => {
+        for (const i of arrayTodo) {
+            if (i._id == del) {
+                const delTodo = [...arrayTodo.slice(0, arrayTodo.indexOf(i)),
+                    ...arrayTodo.slice(arrayTodo.indexOf(i) + 1)]
+                setArrayTodo(delTodo)
+            }
+        }
     }
 
     return (
@@ -181,7 +191,9 @@ function App() {
                                         </Typography>
                                         <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
                                             <Button>{<ModeEditOutlineIcon/>}</Button>
-                                            <Button>{<DeleteIcon/>}</Button>
+                                            <Button onClick={() => {
+                                                todoDelete(value._id)
+                                            }}>{<DeleteIcon/>}</Button>
                                         </Typography>
                                         <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
                                         <Typography variant="h5" component="div">
