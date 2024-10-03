@@ -12,12 +12,21 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {axiosBase} from "../shared/util/axios.ts";
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
+
+import Grid from '@mui/material/Grid2';
+
 function App() {
+    // consts Form Sign Up
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [login, setLogin] = useState<boolean>(false)
     const [registration, setRegistration] = useState<boolean>(false)
 
+    // consts Password
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,6 +36,10 @@ function App() {
         event.preventDefault();
     };
 
+    // consts Card
+    const label = {inputProps: {'aria-label': 'Checkbox demo'}};
+
+    // functions
     const checkLogin = async () => {
         try {
             const response = await axiosBase.post('auth/login', {username, password})
@@ -68,7 +81,7 @@ function App() {
         setRegistration(false);
     }
 
-    const testToDo = [
+    const testTodo = [
         {
             _id: "string",
             title: "string",
@@ -76,25 +89,81 @@ function App() {
             description: "string",
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
+        },
+        {
+            _id: "string2",
+            title: "string2",
+            completed: true,
+            description: "string2",
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        },
+        {
+            _id: "string3",
+            title: "string3",
+            completed: false,
+            description: "string3",
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
         }
     ]
+    const [arrayTodo, setArrayTodo] = useState(testTodo);
 
     return (
         <>
             <ToolBar/>
             {login
-                ? <Button
-                    variant="outlined"
-                    fullWidth={true}
-                    onClick={() => {
-                        checkLogout()
-                    }}>Logout</Button>
-                : // Form "Sign Up"
+                ? // Button Logout
+                <>
+                    <Button
+                        variant="outlined"
+                        fullWidth={true}
+                        onClick={() => {
+                            checkLogout()
+                        }}>Logout</Button>
+                    {/* Card */}
+                    <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
+                        {arrayTodo.map((value, index) => {
+                            return <Grid size={2} key={value._id}>
+                                <Card sx={{width: 'max-content'}}>
+                                    <CardContent>
+                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
+                                            {index + 1}
+                                        </Typography>
+                                        <Typography variant="h5" component="div">
+                                            {value.title}
+                                        </Typography>
+                                        <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
+                                        <Typography variant="body2">
+                                            {value.description}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <div>
+                                            <Button size="small">{value.completed ? 'Success' : 'Todo'}</Button>
+                                            <Checkbox {...label} checked={value.completed} onChange={() => {
+                                                setArrayTodo(arrayTodo.map((item, ind) => {
+                                                    if (ind === index) {
+                                                        return {...item, completed: !item.completed}
+                                                    } else {
+                                                        return item
+                                                    }
+                                                }))
+                                            }}/>
+                                        </div>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        })}
+                    </Grid>
+                </>
+                : // Form Sign Up
                 <Container maxWidth="sm">
                     <Typography variant="h4" width={'100%'} textAlign={'center'}>
                         Sign up
                     </Typography>
-                    {/* Input User */}
+                    {/* Input User */
+                    }
                     <TextField
                         value={username}
                         label="Login"
@@ -103,7 +172,8 @@ function App() {
                         onChange={(e) => {
                             setUsername(e.target.value)
                         }}/>
-                    {/* Input Password */}
+                    {/* Input Password */
+                    }
                     <FormControl sx={{width: '100%'}} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
@@ -129,7 +199,8 @@ function App() {
                             label="Password"
                         />
                     </FormControl>
-                    {/* Buttons */}
+                    {/* Buttons */
+                    }
                     <ButtonGroup fullWidth={true}>
                         {/* Button Login */}
                         <Button
