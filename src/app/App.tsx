@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {axiosBase} from "../shared/util/axios.ts";
+import {axiosBase, axiosLocal} from "../shared/util/axios.ts";
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -18,6 +18,7 @@ import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 import Grid from '@mui/material/Grid2';
 
@@ -40,6 +41,28 @@ function App() {
 
     // consts Card
     const label = {inputProps: {'aria-label': 'Checkbox demo'}};
+    const [title, setTitle] = useState<string>('')
+    const [addTodoView, setAddTodoView] = useState<boolean>(false)
+    const [description, setDescription] = useState<string>('')
+    const testTodo = [
+        {
+            _id: "id1",
+            title: "title1",
+            completed: false,
+            description: "description1",
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        },
+        {
+            _id: "id2",
+            title: "title2",
+            completed: false,
+            description: "description2",
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        }
+    ]
+    const [arrayTodo, setArrayTodo] = useState(testTodo);
 
     // functions
     const checkLogin = async () => {
@@ -83,25 +106,9 @@ function App() {
         setRegistration(false);
     }
 
-    const testTodo = [
-        {
-            _id: "id1",
-            title: "title1",
-            completed: false,
-            description: "description1",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        },
-        {
-            _id: "id2",
-            title: "title2",
-            completed: false,
-            description: "description2",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        }
-    ]
-    const [arrayTodo, setArrayTodo] = useState(testTodo);
+    const todoSave = () => {
+        console.log()
+    }
 
     return (
         <>
@@ -115,6 +122,44 @@ function App() {
                         onClick={() => {
                             checkLogout()
                         }}>Logout</Button>
+                    {/* Add Card */}
+                    <Button onClick={() => {
+                        addTodoView ? setAddTodoView(false) : setAddTodoView(true)
+                    }}>{<AddIcon/>} Add Todo</Button>
+                    {addTodoView ? <Container>
+                        <Typography variant="h5">
+                            Add TODO
+                        </Typography>
+                        <TextField
+                            size={'small'}
+                            value={title}
+                            label='Title'
+                            type={'text'}
+                            fullWidth={false}
+                            onChange={(e) => {
+                                setTitle(e.target.value)
+                            }}/>
+                        <br/>
+                        <TextField
+                            size={'small'}
+                            value={description}
+                            label='Description'
+                            type={'text'}
+                            fullWidth={false}
+                            onChange={(e) => {
+                                setDescription(e.target.value)
+                            }}/>
+                        <br/>
+                        <Button
+                            fullWidth={false}
+                            variant="outlined"
+                            onClick={() => {
+                                todoSave()
+                            }}
+                        >
+                            Save
+                        </Button>
+                    </Container> : undefined}
                     {/* Card */}
                     <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                         {arrayTodo.map((value, index) => {
