@@ -12,16 +12,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {axiosBase} from "../shared/util/axios.ts";
 
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Checkbox from '@mui/material/Checkbox';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
-import Grid from '@mui/material/Grid2';
 import {testTodo} from "../entities/todo/model/todoArray.ts";
+import TodoList from "../entities/todo/ui/TodoList.tsx";
 
 function App() {
     const [username, setUsername] = useState<string>('')
@@ -38,7 +32,6 @@ function App() {
         event.preventDefault();
     };
 
-    const label = {inputProps: {'aria-label': 'Checkbox demo'}};
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
@@ -162,47 +155,11 @@ function App() {
                             Save
                         </Button>
                     </Container> : undefined}
-                    {/* Card */}
-                    <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
-                        {arrayTodo.map((value, index) => {
-                            return <Grid size={2} key={value._id}>
-                                <Card sx={{width: 'max-content'}}>
-                                    <CardContent>
-                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
-                                            {index + 1}
-                                        </Typography>
-                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
-                                            <Button>{<ModeEditOutlineIcon/>}</Button>
-                                            <Button onClick={() => {
-                                                todoDelete(value._id)
-                                            }}>{<DeleteIcon/>}</Button>
-                                        </Typography>
-                                        <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
-                                        <Typography variant="h5" component="div">
-                                            {value.title}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {value.description}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <div>
-                                            <Button size="small" onClick={() => {
-                                                setArrayTodo(arrayTodo.map((item, ind) => {
-                                                    if (ind === index) {
-                                                        return {...item, completed: !item.completed}
-                                                    } else {
-                                                        return item
-                                                    }
-                                                }))
-                                            }}>{value.completed ? 'Success' : 'Todo'}
-                                                {<Checkbox {...label} checked={value.completed}/>}</Button>
-                                        </div>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-                        })}
-                    </Grid>
+                    {/* ToDo */}
+                    <TodoList
+                        arrayTodo={arrayTodo}
+                        todoDelete={todoDelete}
+                        setArrayTodo={setArrayTodo}/>
                 </>
                 : // Form Sign Up
                 <Container maxWidth="sm">
