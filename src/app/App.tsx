@@ -21,15 +21,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
 import Grid from '@mui/material/Grid2';
+import {testTodo} from "../entities/todo/model/todoArray.ts";
 
 function App() {
-    // consts Form Sign Up
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [login, setLogin] = useState<boolean>(false)
     const [registration, setRegistration] = useState<boolean>(false)
 
-    // consts Password
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,32 +38,12 @@ function App() {
         event.preventDefault();
     };
 
-    // consts Card
     const label = {inputProps: {'aria-label': 'Checkbox demo'}};
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
-    const testTodo = [
-        {
-            _id: "id1",
-            title: "title1",
-            completed: false,
-            description: "description1",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        },
-        {
-            _id: "id2",
-            title: "title2",
-            completed: false,
-            description: "description2",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        }
-    ]
     const [arrayTodo, setArrayTodo] = useState(testTodo);
 
-    // functions
     const checkLogin = async () => {
         try {
             const response = await axiosBase.post('auth/login', {username, password})
