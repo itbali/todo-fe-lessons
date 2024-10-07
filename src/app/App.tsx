@@ -12,21 +12,19 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {axiosBase} from "../shared/util/axios.ts";
 
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Checkbox from '@mui/material/Checkbox';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import AddIcon from '@mui/icons-material/Add';
 
-import Grid from '@mui/material/Grid2';
+import {testTodo} from "../entities/todo/model/todoArray.ts";
+import TodoList from "../entities/todo/ui/TodoList.tsx";
+import useTodosStore, {TodoState} from "../entities/todo/model/todoStore.ts";
+
 
 function App() {
     // consts Form Sign Up
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [login, setLogin] = useState<boolean>(false)
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [registration, setRegistration] = useState<boolean>(false)
 
     // consts Password
@@ -40,28 +38,11 @@ function App() {
     };
 
     // consts Card
-    const label = {inputProps: {'aria-label': 'Checkbox demo'}};
+
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
-    const testTodo = [
-        {
-            _id: "id1",
-            title: "title1",
-            completed: false,
-            description: "description1",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        },
-        {
-            _id: "id2",
-            title: "title2",
-            completed: false,
-            description: "description2",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        }
-    ]
+
     const [arrayTodo, setArrayTodo] = useState(testTodo);
 
     // functions
@@ -70,9 +51,9 @@ function App() {
             const response = await axiosBase.post('auth/login', {username, password})
 
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.status === 201 ? setLogin(true) : setLogin(false);
+            response.status === 201 ? setIsLoggedIn(true) : setIsLoggedIn(false);
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.status === 200 ? setLogin(true) : setLogin(false);
+            response.status === 200 ? setIsLoggedIn(true) : setIsLoggedIn(false);
 
             // Errors
             if (response.status === 401) {
@@ -105,37 +86,31 @@ function App() {
     }
 
     const checkLogout = () => {
-        setLogin(false);
+        setIsLoggedIn(false);
         setRegistration(false);
     }
 
+    const addTodo = useTodosStore((state:TodoState) => state.addTodo)
+    const todos = useTodosStore(state => state.todos)
+
     const todoSave = () => {
         const add = {
-            _id: `id${arrayTodo.length + 1}`,
+            _id: `id${todos.length + 1}`,
             title: title,
             completed: false,
             description: description,
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         }
-        const updateArrayTodo = [...arrayTodo, add]
-        setArrayTodo(updateArrayTodo)
+
+        addTodo(add)
     }
 
-    const todoDelete = (del: string) => {
-        for (const i of arrayTodo) {
-            if (i._id == del) {
-                const delTodo = [...arrayTodo.slice(0, arrayTodo.indexOf(i)),
-                    ...arrayTodo.slice(arrayTodo.indexOf(i) + 1)]
-                setArrayTodo(delTodo)
-            }
-        }
-    }
 
     return (
         <>
-            <ToolBar/>
-            {login
+            <ToolBar amount={arrayTodo.length} isLoggedIn={isLoggedIn}/>
+            {isLoggedIn
                 ? // Button Logout
                 <>
                     <Button
@@ -184,46 +159,7 @@ function App() {
                         </Button>
                     </Container> : undefined}
                     {/* Card */}
-                    <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
-                        {arrayTodo.map((value, index) => {
-                            return <Grid size={2} key={value._id}>
-                                <Card sx={{width: 'max-content'}}>
-                                    <CardContent>
-                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
-                                            {index + 1}
-                                        </Typography>
-                                        <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
-                                            <Button>{<ModeEditOutlineIcon/>}</Button>
-                                            <Button onClick={() => {
-                                                todoDelete(value._id)
-                                            }}>{<DeleteIcon/>}</Button>
-                                        </Typography>
-                                        <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
-                                        <Typography variant="h5" component="div">
-                                            {value.title}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {value.description}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <div>
-                                            <Button size="small" onClick={() => {
-                                                setArrayTodo(arrayTodo.map((item, ind) => {
-                                                    if (ind === index) {
-                                                        return {...item, completed: !item.completed}
-                                                    } else {
-                                                        return item
-                                                    }
-                                                }))
-                                            }}>{value.completed ? 'Success' : 'Todo'}
-                                                {<Checkbox {...label} checked={value.completed}/>}</Button>
-                                        </div>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-                        })}
-                    </Grid>
+                    <TodoList />
                 </>
                 : // Form Sign Up
                 <Container maxWidth="sm">
