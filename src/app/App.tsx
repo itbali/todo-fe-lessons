@@ -106,7 +106,10 @@ function App() {
 
     return (
         <>
-            <ToolBar/>
+            <ToolBar
+                amount={arrayTodo.filter((value) => !value.completed).length}
+                login={login}
+            />
             {login
                 ? // Button Logout
                 <>

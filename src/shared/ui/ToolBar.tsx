@@ -48,7 +48,12 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
 }));
 
-export const ToolBar = () => {
+type typeToolbarProps = {
+    login: boolean,
+    amount: number
+}
+
+export const ToolBar = ({login, amount}: typeToolbarProps) => {
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -68,7 +73,7 @@ export const ToolBar = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        TODO-VI
+                        {login ? `TOTAL TODOS: ${amount}` : 'TODO-VI'}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
