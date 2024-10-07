@@ -43,7 +43,7 @@ function App() {
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
 
-    const [arrayTodo, setArrayTodo] = useState(testTodo);
+    const [arrayTodo] = useState(testTodo);
 
     // functions
     const checkLogin = async () => {
