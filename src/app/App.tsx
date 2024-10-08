@@ -14,14 +14,15 @@ import {axiosBase} from "../shared/util/axios.ts";
 
 import AddIcon from '@mui/icons-material/Add';
 
-import {testTodo} from "../entities/todo/model/todoArray.ts";
 import TodoList from "../entities/todo/ui/TodoList.tsx";
+import useTodosStore from "../entities/todo/model/todoStore.ts";
 
 function App() {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [login, setLogin] = useState<boolean>(false)
+    const [logged, setLogged] = useState<boolean>(false)
     const [registration, setRegistration] = useState<boolean>(false)
+    const [disabledButton, setDisabledButton] = useState<boolean>(false)
 
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -35,23 +36,26 @@ function App() {
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
-    const [arrayTodo, setArrayTodo] = useState(testTodo);
 
     const checkLogin = async () => {
+        setDisabledButton(true)
         try {
             const response = await axiosBase.post('auth/login', {username, password})
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.status === 201 ? setLogin(true) : setLogin(false);
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.status === 200 ? setLogin(true) : setLogin(false);
+            if (response.status === 201 || response.status === 200) {
+                setDisabledButton(true)
+                setLogged(true)
+            } else {
+                setDisabledButton(false)
+                setLogged(false)
+            }
 
-            // Errors
             if (response.status === 401) {
                 throw Error('Status Code 401\nThis user does not exist!');
             } else if (response.status === 404) {
                 throw Error('Status Code 404\nThe page was not found.');
             }
+
             console.log(response.status)
         } catch (e) {
             console.warn(e)
@@ -62,56 +66,52 @@ function App() {
         try {
             const response = await axiosBase.post('auth/register', {username, password})
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            response.status === 201 ? setRegistration(true) : setRegistration(false);
+            if (response.status === 201 || response.status === 200) {
+                setRegistration(true)
+            } else {
+                setRegistration(false)
+            }
 
-            // Errors
             if (response.status === 409) {
                 throw Error('Status Code 409\nThis user already exists!');
             } else if (response.status === 404) {
                 throw Error('Status Code 404\nThe page was not found.');
             }
+
+            console.log(response.status)
         } catch (e) {
             console.warn(e)
         }
     }
 
     const checkLogout = () => {
-        setLogin(false);
+        setLogged(false);
         setRegistration(false);
+        setDisabledButton(false)
     }
 
+    const todos = useTodosStore(state => state.todos)
+    const addTodo = useTodosStore((state) => state.addTodo);
     const todoSave = () => {
         const add = {
-            _id: `id${arrayTodo.length + 1}`,
+            _id: `id${todos.length + 1}`,
             title: title,
             completed: false,
             description: description,
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         }
-        const updateArrayTodo = [...arrayTodo, add]
-        setArrayTodo(updateArrayTodo)
-    }
-
-    const todoDelete = (del: string) => {
-        for (const i of arrayTodo) {
-            if (i._id == del) {
-                const delTodo = [...arrayTodo.slice(0, arrayTodo.indexOf(i)),
-                    ...arrayTodo.slice(arrayTodo.indexOf(i) + 1)]
-                setArrayTodo(delTodo)
-            }
-        }
+        addTodo(add)
+        setTitle('')
+        setDescription('')
     }
 
     return (
         <>
             <ToolBar
-                amount={arrayTodo.filter((value) => !value.completed).length}
-                login={login}
+                logged={logged}
             />
-            {login
-                ? // Button Logout
+            {logged ?
                 <>
                     <Button
                         variant="outlined"
@@ -125,7 +125,7 @@ function App() {
                         addTodoView ? setAddTodoView(false) : setAddTodoView(true)
                     }}>{<AddIcon/>} Add Todo</Button>
                     {addTodoView ? <Container>
-                        <Typography variant="h5">
+                        <Typography variant="h5" sx={{textAlign: 'center'}}>
                             Add TODO
                         </Typography>
                         <TextField
@@ -133,7 +133,7 @@ function App() {
                             value={title}
                             label='Title'
                             type={'text'}
-                            fullWidth={false}
+                            fullWidth={true}
                             onChange={(e) => {
                                 setTitle(e.target.value)
                             }}/>
@@ -143,13 +143,13 @@ function App() {
                             value={description}
                             label='Description'
                             type={'text'}
-                            fullWidth={false}
+                            fullWidth={true}
                             onChange={(e) => {
                                 setDescription(e.target.value)
                             }}/>
                         <br/>
                         <Button
-                            fullWidth={false}
+                            fullWidth={true}
                             variant="outlined"
                             onClick={() => {
                                 todoSave()
@@ -158,11 +158,9 @@ function App() {
                             Save
                         </Button>
                     </Container> : undefined}
-                    {/* ToDo */}
                     <TodoList/>
                 </>
-                : // Form Sign Up
-                <Container maxWidth="sm">
+                : <Container maxWidth="sm">
                     <Typography variant="h4" width={'100%'} textAlign={'center'}>
                         Sign up
                     </Typography>
@@ -209,6 +207,7 @@ function App() {
                         {/* Button Login */}
                         <Button
                             variant="outlined"
+                            disabled={disabledButton}
                             onClick={() => {
                                 checkLogin()
                             }}

@@ -23,6 +23,7 @@ const Search = styled('div')(({theme}) => ({
         width: 'auto',
     },
 }));
+
 const SearchIconWrapper = styled('div')(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -32,6 +33,7 @@ const SearchIconWrapper = styled('div')(({theme}) => ({
     alignItems: 'center',
     justifyContent: 'center',
 }));
+
 const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     width: '100%',
@@ -50,10 +52,10 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 type typeToolbarProps = {
-    login: boolean
+    logged: boolean
 }
 
-export const ToolBar = ({login}: typeToolbarProps) => {
+export const ToolBar = ({logged}: typeToolbarProps) => {
     const todos = useTodosStore(state => state.todos)
 
     return (
@@ -75,7 +77,7 @@ export const ToolBar = ({login}: typeToolbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {login ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : 'TODO-VI'}
+                        {logged ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : 'TODO-VI'}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
