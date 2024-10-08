@@ -1,4 +1,4 @@
-export type todoType = {
+export type TTodoItem = {
     _id: string,
     title: string,
     completed: boolean,

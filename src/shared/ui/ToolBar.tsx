@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import useTodosStore from "../../entities/todo/model/todoStore.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -49,11 +50,12 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 type typeToolbarProps = {
-    login: boolean,
-    amount: number
+    login: boolean
 }
 
-export const ToolBar = ({login, amount}: typeToolbarProps) => {
+export const ToolBar = ({login}: typeToolbarProps) => {
+    const todos = useTodosStore(state => state.todos)
+
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -73,7 +75,7 @@ export const ToolBar = ({login, amount}: typeToolbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {login ? `TOTAL TODOS: ${amount}` : 'TODO-VI'}
+                        {login ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : 'TODO-VI'}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>

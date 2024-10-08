@@ -159,10 +159,7 @@ function App() {
                         </Button>
                     </Container> : undefined}
                     {/* ToDo */}
-                    <TodoList
-                        arrayTodo={arrayTodo}
-                        todoDelete={todoDelete}
-                        setArrayTodo={setArrayTodo}/>
+                    <TodoList/>
                 </>
                 : // Form Sign Up
                 <Container maxWidth="sm">
