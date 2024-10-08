@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import {Button} from "@mui/material";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
@@ -28,7 +28,7 @@ const TodoItem = ({value, index, todoDelete, setArrayTodo}: todoItemProps) => {
                         {index + 1}
                     </Typography>
                     <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
-                        <Button>{<ModeEditOutlineIcon/>}</Button>
+                        {/*<Button>{<ModeEditOutlineIcon/>}</Button>*/}
                         <Button onClick={() => {
                             todoDelete(value._id)
                         }}>{<DeleteIcon/>}</Button>
