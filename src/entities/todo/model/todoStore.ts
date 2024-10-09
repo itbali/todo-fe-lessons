@@ -2,6 +2,8 @@ import {create} from 'zustand'
 import {testTodo} from "./todoArray.ts";
 import {TTodoItem} from "./TTodoItem.ts";
 
+import {persist} from 'zustand/middleware'
+
 export interface TodoState {
     todos: TTodoItem[]
     updateTodo: (todo: TTodoItem) => void
@@ -16,11 +18,14 @@ export interface TodoState {
     }) => void
 }
 
-const useTodosStore = create<TodoState>((set) => ({
-    todos: testTodo,
-    updateTodo: (todo) => set((state) => ({todos: state.todos.map(t => t._id === todo._id ? todo : t)})),
-    deleteTodo: (id) => set((state) => ({todos: state.todos.filter(t => t._id !== id)})),
-    addTodo: (newTodo) => set((state) => ({todos: [...state.todos, newTodo]}))
-}))
+const useTodosStore = create<TodoState>()(
+    persist((set) => ({
+            todos: testTodo,
+            updateTodo: (todo) => set((state) => ({todos: state.todos.map(t => t._id === todo._id ? todo : t)})),
+            deleteTodo: (id) => set((state) => ({todos: state.todos.filter(t => t._id !== id)})),
+            addTodo: (newTodo) => set((state) => ({todos: [...state.todos, newTodo]}))
+        }), {name: 'todos'}
+    )
+)
 
 export default useTodosStore;
