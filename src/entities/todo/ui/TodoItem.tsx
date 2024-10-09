@@ -22,7 +22,7 @@ const TodoItem = ( {value, index}:TTodoItemProps)  => {
 
     return (
         <Grid size={2} key={value._id}>
-            <Card sx={{width: 'max-content'}}>
+            <Card sx={{width: 'max-content', border: '1px solid grey'}}>
                 <CardContent>
                     <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
                         {index + 1}

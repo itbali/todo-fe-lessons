@@ -51,10 +51,9 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 
 type TTollbarProps = {
     isLoggedIn: boolean,
-    amount: number
 }
 
-export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
+export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
     const todos = useTodosStore(state => state.todos)
     return (
         <Box sx={{flexGrow: 1}}>
@@ -75,7 +74,7 @@ export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {isLoggedIn ?"TOTAL TODOS: " + todos.length : "TODO-VI"}
+                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
