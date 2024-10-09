@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import {testTodo} from "./todoArray.ts";
 import {TTodoItem} from "./todoItem.type.ts";
-import {persist,  PersistStorage} from 'zustand/middleware'
+import {persist} from 'zustand/middleware'
 
 export interface TodoState {
     todos: TTodoItem[]
