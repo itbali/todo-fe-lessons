@@ -5,11 +5,11 @@ import {ToolBar} from "../shared/ui/ToolBar.tsx";
 import AddIcon from '@mui/icons-material/Add';
 
 import TodoList from "../entities/todo/ui/TodoList.tsx";
-import useTodosStore, {TodoState} from "../entities/todo/model/todoStore.ts";
 import SignUpForm from "../entities/user/ui/SignUpForm.tsx";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {logout, selectIsLoggedIn} from "../entities/user/model/userSlice.ts";
+import {selectTodos, setAddTodo} from "../entities/todo/model/todoSlice.ts";
 
 
 function App() {
@@ -28,8 +28,8 @@ function App() {
         dispatch(logout())
     }
 
-    const addTodo = useTodosStore((state: TodoState) => state.addTodo)
-    const todos = useTodosStore(state => state.todos)
+    // const addTodo = useTodosStore((state: TodoState) => state.addTodo)
+    const todos = useSelector(selectTodos)
     const todoSave = () => {
         const add = {
             _id: `id${todos.length + 1}`,
@@ -39,7 +39,7 @@ function App() {
             createdAt: "2024-08-21T12:00:00Z",
             updatedAt: "2024-08-21T12:00:00Z"
         }
-        addTodo(add)
+        dispatch(setAddTodo(add))
         setTitle('')
         setDescription('')
     }

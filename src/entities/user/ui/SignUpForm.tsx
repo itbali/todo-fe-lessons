@@ -33,7 +33,7 @@ const SignUpForm = () => {
     const checkLogin = async () => {
         setDisabledButton(true)
         try {
-            const response = await axiosBase.post<{access_token: string, username: string}>
+            const response = await axiosBase.post<{ access_token: string, username: string }>
             ('auth/login', {username, password})
 
             if (response.status === 201 || response.status === 200) {
