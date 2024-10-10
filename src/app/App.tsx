@@ -1,100 +1,89 @@
-import {useState} from 'react'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import AddIcon from '@mui/icons-material/Add'
+import Typography from '@mui/material/Typography'
+import { Button, Container, TextField } from '@mui/material'
 
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import {Button, Container, TextField} from "@mui/material";
-
-import {ToolBar} from "../shared/ui/ToolBar.tsx";
-
-import TodoList from "../entities/todo/ui/TodoList.tsx";
-import {testTodo} from "../entities/todo/model/todoArray.ts";
-import useTodosStore, {TodoState} from "../entities/todo/model/todoStore.ts";
-
-import SignUpForm from "../entities/user/ui/SignUpForm.tsx";
+import { ToolBar } from '../shared/ui/ToolBar.tsx'
+import TodoList from '../entities/todo/ui/TodoList.tsx'
+import { addTodo, selectTodos } from '../entities/todo/model/todoSlice.ts'
+import SignUpForm from '../entities/user/ui/SignUpForm.tsx'
+import { logout, selectIsLoggedIn } from '../entities/user/model/userSlice.ts'
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
-    const [arrayTodo] = useState(testTodo);
 
-    const checkLogout = () => {
-        setIsLoggedIn(false);
-       // setRegistration(false);
+    const isLoggedIn = useSelector(selectIsLoggedIn)
+    const todos = useSelector(selectTodos)
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        dispatch(logout())
     }
 
-    const addTodo = useTodosStore((state:TodoState) => state.addTodo)
-    const todos = useTodosStore(state => state.todos)
-
-    const todoSave = () => {
-        const add = {
-            _id: `id${todos.length + 1}`,
-            title: title,
-            completed: false,
-            description: description,
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
+    const handleAddTodo = () => {
+        const newTodo = {
+            id: `id${todos.length + 1}`,
+            title,
+            completed: false
         }
 
-        addTodo(add)
+        dispatch(addTodo(newTodo))
+        setTitle('')
+        setDescription('')
+        setAddTodoView(false)
     }
-
 
     return (
         <>
-            <ToolBar amount={arrayTodo.length} isLoggedIn={isLoggedIn}/>
-            {isLoggedIn
-                ?
+            <ToolBar />
+            {isLoggedIn ? (
                 <>
                     <Button
                         variant="outlined"
                         fullWidth={true}
-                        onClick={() => {
-                            checkLogout()
-                        }}>Logout</Button>
-                    <Button onClick={() => {
-                        addTodoView ? setAddTodoView(false) : setAddTodoView(true)
-                    }}>{<AddIcon/>} Add Todo</Button>
-                    {addTodoView ? <Container>
-                        <Typography variant="h5">
-                            Add TODO
-                        </Typography>
-                        <TextField
-                            size={'small'}
-                            value={title}
-                            label='Title'
-                            type={'text'}
-                            fullWidth={false}
-                            onChange={(e) => {
-                                setTitle(e.target.value)
-                            }}/>
-                        <br/>
-                        <TextField
-                            size={'small'}
-                            value={description}
-                            label='Description'
-                            type={'text'}
-                            fullWidth={false}
-                            onChange={(e) => {
-                                setDescription(e.target.value)
-                            }}/>
-                        <br/>
-                        <Button
-                            fullWidth={false}
-                            variant="outlined"
-                            onClick={() => {
-                                todoSave()
-                            }}
-                        >
-                            Save
-                        </Button>
-                    </Container> : undefined}
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                    <Button onClick={() => setAddTodoView(!addTodoView)}>
+                        <AddIcon /> Add Todo
+                    </Button>
+                    {addTodoView && (
+                        <Container>
+                            <Typography variant="h5">Add TODO</Typography>
+                            <TextField
+                                size="small"
+                                value={title}
+                                label="Title"
+                                fullWidth={false}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
+                            <br />
+                            <TextField
+                                size="small"
+                                value={description}
+                                label="Description"
+                                fullWidth={false}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                            <br />
+                            <Button
+                                fullWidth={false}
+                                variant="outlined"
+                                onClick={handleAddTodo}
+                            >
+                                Save
+                            </Button>
+                        </Container>
+                    )}
                     <TodoList />
                 </>
-                :
-                <SignUpForm/>
-            }
+            ) : (
+                <SignUpForm />
+            )}
         </>
     )
 }

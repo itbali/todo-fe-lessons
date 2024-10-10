@@ -10,17 +10,18 @@ import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {Button, ButtonGroup, Container, TextField} from "@mui/material";
 
+import { useDispatch} from 'react-redux'
+
 import {axiosBase} from "../../../shared/util/axios.ts";
+import {setIsLoggedIn, setUser} from "../model/userSlice.ts";
 
 const SignUpForm = () => {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [_isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-
     const [showPassword, setShowPassword] = useState(false);
-
     const [registration, setRegistration] = useState<boolean>(false)
 
+    const dispatch = useDispatch();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,10 +33,15 @@ const SignUpForm = () => {
 
     const checkLogin = async () => {
         try {
-            const response = await axiosBase.post('auth/login', {username, password})
+            const response = await axiosBase.post<{access_token:string, username: string}>('auth/login', {username, password})
 
-            response.status === 201 ? setIsLoggedIn(true) : setIsLoggedIn(false);
-            response.status === 200 ? setIsLoggedIn(true) : setIsLoggedIn(false);
+            if(response.status === 201 || response.status === 200){
+                dispatch(setUser(response.data))
+                dispatch(setIsLoggedIn(true))
+            }else{
+                dispatch(setIsLoggedIn(false))
+            }
+
 
             if (response.status === 401) {
                 throw Error('Status Code 401\nThis user does not exist!');

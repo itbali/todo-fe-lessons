@@ -1,26 +1,22 @@
-import Grid from "@mui/material/Grid2";
-
-import useTodosStore from "../model/todoStore.ts";
-import {TTodoItem} from "../model/todoItem.type.ts";
-import {todosSelector} from "../model/selectors/todosSelector.ts";
-
-import TodoItem from "./TodoItem.tsx";
+import Grid from "@mui/material/Grid"
+import { useSelector } from "react-redux"
+import { selectTodos } from "../model/todoSlice.ts"
+import TodoItem from "./TodoItem.tsx"
 
 const TodoList = () => {
-
-    const arrayTodos:TTodoItem[] = useTodosStore(todosSelector);
+    const arrayTodos = useSelector(selectTodos)
 
     return (
-        <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
-            {arrayTodos.map((value, index) => {
-                return <TodoItem
-                    key={value._id}
-                    value={value}
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {arrayTodos.map((todo, index) => (
+                <TodoItem
+                    key={todo._id}
+                    value={todo}
                     index={index}
-                    />
-            })}
+                />
+            ))}
         </Grid>
-    );
-};
+    )
+}
 
-export default TodoList;
+export default TodoList
