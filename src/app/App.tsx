@@ -11,22 +11,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {logout, selectIsLoggedIn} from "../entities/user/model/userSlice.ts";
 import {selectTodos, setAddTodo} from "../entities/todo/model/todoSlice.ts";
 
-
 function App() {
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
-    const [, setRegistration] = useState<boolean>(false)
-    const [, setDisabledButton] = useState<boolean>(false)
 
     const isLoggedIn = useSelector(selectIsLoggedIn)
     const dispatch = useDispatch()
-
-    const checkLogout = () => {
-        setRegistration(false);
-        setDisabledButton(false);
-        dispatch(logout())
-    }
 
     const todos = useSelector(selectTodos)
     const todoSave = () => {
@@ -54,15 +45,14 @@ function App() {
                 <>
                     <ButtonGroup fullWidth={true}>
                         <Button fullWidth={true} onClick={() => {
-                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                            addTodoView ? setAddTodoView(false) : setAddTodoView(true)
+                            setAddTodoView(addTodoView ? false : true)
                         }}>{<AddIcon/>} Add Todo
                         </Button>
                         <Button
                             variant="outlined"
                             fullWidth={true}
                             onClick={() => {
-                                checkLogout()
+                                dispatch(logout())
                             }}>Logout
                         </Button>
                     </ButtonGroup>
