@@ -28,11 +28,14 @@ function App() {
         dispatch(logout())
     }
 
-    // const addTodo = useTodosStore((state: TodoState) => state.addTodo)
     const todos = useSelector(selectTodos)
     const todoSave = () => {
+        let createId: number = todos.length + 1
+        while(todos.filter(t => t._id === createId).length !== 0){
+            createId += 1
+        }
         const add = {
-            _id: `id${todos.length + 1}`,
+            _id: createId,
             title: title,
             completed: false,
             description: description,
