@@ -7,7 +7,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import useTodosStore from "../../entities/todo/model/todoStore.ts";
+import {useSelector} from "react-redux";
+import {selectUser} from "../../entities/user/model/userSlice.ts";
+import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -23,6 +25,7 @@ const Search = styled('div')(({theme}) => ({
         width: 'auto',
     },
 }));
+
 const SearchIconWrapper = styled('div')(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -32,6 +35,7 @@ const SearchIconWrapper = styled('div')(({theme}) => ({
     alignItems: 'center',
     justifyContent: 'center',
 }));
+
 const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     width: '100%',
@@ -51,11 +55,12 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 
 type TTollbarProps = {
     isLoggedIn: boolean,
-    amount: number
 }
 
-export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
-    const todos = useTodosStore(state => state.todos)
+export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
+    const todos = useSelector(selectTodos)
+    const user = useSelector(selectUser)
+
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -75,7 +80,15 @@ export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {isLoggedIn ?"TOTAL TODOS: " + todos.length : "TODO-VI"}
+                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                    </Typography>
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component="div"
+                        sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
+                    >
+                        {user && `HELLO, ${user.toUpperCase()}!`}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>

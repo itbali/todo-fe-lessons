@@ -1,5 +1,5 @@
 export type TTodoItem = {
-    _id: string,
+    _id: number,
     title: string,
     completed: boolean,
     description: string,
