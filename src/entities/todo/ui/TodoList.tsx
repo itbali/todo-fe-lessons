@@ -1,12 +1,10 @@
 import Grid from "@mui/material/Grid2";
 
-import TodoItem from "./TodoItem.tsx";
+import useTodosStore from "../model/todoStore.ts";
+import {TTodoItem} from "../model/todoItem.type.ts";
 import {todosSelector} from "../model/selectors/todosSelector.ts";
 
-import {TTodoItem} from "../model/todoItem.type.ts";
-import useTodosStore from "../model/todoStore.ts";
-
-
+import TodoItem from "./TodoItem.tsx";
 
 const TodoList = () => {
 

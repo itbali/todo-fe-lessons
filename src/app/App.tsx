@@ -1,13 +1,16 @@
 import {useState} from 'react'
+
+import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import {Button, Container, TextField} from "@mui/material";
-import {ToolBar} from "../shared/ui/ToolBar.tsx";
-import AddIcon from '@mui/icons-material/Add';
-import {testTodo} from "../entities/todo/model/todoArray.ts";
-import TodoList from "../entities/todo/ui/TodoList.tsx";
-import useTodosStore, {TodoState} from "../entities/todo/model/todoStore.ts";
-import SignUpForm from "../entities/user/ui/SignUpForm.tsx";
 
+import {ToolBar} from "../shared/ui/ToolBar.tsx";
+
+import TodoList from "../entities/todo/ui/TodoList.tsx";
+import {testTodo} from "../entities/todo/model/todoArray.ts";
+import useTodosStore, {TodoState} from "../entities/todo/model/todoStore.ts";
+
+import SignUpForm from "../entities/user/ui/SignUpForm.tsx";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)

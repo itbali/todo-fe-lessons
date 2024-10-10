@@ -1,16 +1,16 @@
-import Typography from "@mui/material/Typography";
-import {Button, ButtonGroup, Container, TextField} from "@mui/material";
-import FormControl from "@mui/material/FormControl";
+import {useState} from "react";
+
+import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
-import React, {useState} from "react";
+import {Button, ButtonGroup, Container, TextField} from "@mui/material";
+
 import {axiosBase} from "../../../shared/util/axios.ts";
-
-
 
 const SignUpForm = () => {
     const [username, setUsername] = useState<string>('')
@@ -77,8 +77,7 @@ const SignUpForm = () => {
                 onChange={(e) => {
                     setUsername(e.target.value)
                 }}/>
-            {/* Input Password */
-            }
+
             <FormControl sx={{width: '100%'}} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                 <OutlinedInput
@@ -104,10 +103,7 @@ const SignUpForm = () => {
                     label="Password"
                 />
             </FormControl>
-            {/* Buttons */
-            }
             <ButtonGroup fullWidth={true}>
-                {/* Button Login */}
                 <Button
                     variant="outlined"
                     onClick={() => {
@@ -116,7 +112,6 @@ const SignUpForm = () => {
                 >
                     Login
                 </Button>
-                {/* Button Registration */}
                 {!registration
                     ? <Button variant="outlined" onClick={() => {
                         checkRegistration()
