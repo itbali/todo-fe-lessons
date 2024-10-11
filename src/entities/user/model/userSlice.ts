@@ -1,15 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
-
+import {createSlice} from '@reduxjs/toolkit'
 
 type TUser = {
-    access_token:string,
-    username: string
+    access_token: string, username: string
+    toUpperCase(): string;
 }
 
 type TUserSlice = {
     user?: TUser,
-    isLoggedIn: boolean,
-    error: string,
+    isLoggedIn: false,
+    error: string
 }
 
 const initialUserState:TUserSlice = {
@@ -20,7 +19,7 @@ const initialUserState:TUserSlice = {
 
 export const userSlice = createSlice({
     name: 'user',
-    initialState:initialUserState ,
+    initialState: initialUserState,
     reducers: {
         setIsLoggedIn: (state, action) => {
             state.isLoggedIn = action.payload
@@ -34,11 +33,11 @@ export const userSlice = createSlice({
         }
     },
     selectors: {
-        selectUser: state => state.user,
-        selectIsLoggedIn: state => state.isLoggedIn,
-        selectError: state => state.error,
+        selectUser: (state) => state.user,
+        selectIsLoggedIn: (state) => state.isLoggedIn,
+        selectError: (state) => state.error
     }
 })
 
-export const {setIsLoggedIn, logout, setUser} = userSlice.actions;
-export const  {selectUser, selectIsLoggedIn, selectError} = userSlice.selectors;
+export const {setIsLoggedIn, setUser, logout} = userSlice.actions
+export const {selectUser, selectIsLoggedIn, selectError} = userSlice.selectors

@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import AddIcon from '@mui/icons-material/Add'
-import Typography from '@mui/material/Typography'
-import { Button, Container, TextField } from '@mui/material'
+import Typography from '@mui/material/Typography';
+import {Button, ButtonGroup, Container, TextField} from "@mui/material";
+import {ToolBar} from "../shared/ui/ToolBar.tsx";
 
-import { ToolBar } from '../shared/ui/ToolBar.tsx'
-import TodoList from '../entities/todo/ui/TodoList.tsx'
-import { addTodo, selectTodos } from '../entities/todo/model/todoSlice.ts'
-import SignUpForm from '../entities/user/ui/SignUpForm.tsx'
-import { logout, selectIsLoggedIn } from '../entities/user/model/userSlice.ts'
+import AddIcon from '@mui/icons-material/Add';
+
+import TodoList from "../entities/todo/ui/TodoList.tsx";
+import SignUpForm from "../entities/user/ui/SignUpForm.tsx";
+import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {logout, selectIsLoggedIn} from "../entities/user/model/userSlice.ts";
+import {selectTodos, setAddTodo} from "../entities/todo/model/todoSlice.ts";
 
 function App() {
     const [title, setTitle] = useState<string>('')
@@ -16,74 +17,85 @@ function App() {
     const [description, setDescription] = useState<string>('')
 
     const isLoggedIn = useSelector(selectIsLoggedIn)
-    const todos = useSelector(selectTodos)
     const dispatch = useDispatch()
 
-    const handleLogout = () => {
-        dispatch(logout())
-    }
-
-    const handleAddTodo = () => {
-        const newTodo = {
-            id: `id${todos.length + 1}`,
-            title,
-            completed: false
+    const todos = useSelector(selectTodos)
+    const todoSave = () => {
+        let createId: number = todos.length + 1
+        while(todos.filter(t => t._id === createId).length !== 0){
+            createId += 1
         }
-
-        dispatch(addTodo(newTodo))
+        const add = {
+            _id: createId,
+            title: title,
+            completed: false,
+            description: description,
+            createdAt: "2024-08-21T12:00:00Z",
+            updatedAt: "2024-08-21T12:00:00Z"
+        }
+        dispatch(setAddTodo(add))
         setTitle('')
         setDescription('')
-        setAddTodoView(false)
     }
 
     return (
         <>
-            <ToolBar />
-            {isLoggedIn ? (
+            <ToolBar isLoggedIn={isLoggedIn}/>
+            {isLoggedIn ?
                 <>
-                    <Button
-                        variant="outlined"
-                        fullWidth={true}
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </Button>
-                    <Button onClick={() => setAddTodoView(!addTodoView)}>
-                        <AddIcon /> Add Todo
-                    </Button>
-                    {addTodoView && (
+                    <ButtonGroup fullWidth={true}>
+                        <Button fullWidth={true} onClick={() => {
+                            setAddTodoView(addTodoView ? false : true)
+                        }}>{<AddIcon/>} Add Todo
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            fullWidth={true}
+                            onClick={() => {
+                                dispatch(logout())
+                            }}>Logout
+                        </Button>
+                    </ButtonGroup>
+                    {addTodoView ?
                         <Container>
-                            <Typography variant="h5">Add TODO</Typography>
+                            <Typography variant="h5" sx={{textAlign: 'center'}}>
+                                Add TODO
+                            </Typography>
                             <TextField
-                                size="small"
+                                size={'small'}
                                 value={title}
-                                label="Title"
-                                fullWidth={false}
-                                onChange={(e) => setTitle(e.target.value)}
-                            />
-                            <br />
+                                label='Title'
+                                type={'text'}
+                                fullWidth={true}
+                                onChange={(e) => {
+                                    setTitle(e.target.value)
+                                }}/>
+                            <br/>
                             <TextField
-                                size="small"
+                                size={'small'}
                                 value={description}
-                                label="Description"
-                                fullWidth={false}
-                                onChange={(e) => setDescription(e.target.value)}
-                            />
-                            <br />
+                                label='Description'
+                                type={'text'}
+                                fullWidth={true}
+                                onChange={(e) => {
+                                    setDescription(e.target.value)
+                                }}/>
+                            <br/>
                             <Button
-                                fullWidth={false}
+                                fullWidth={true}
                                 variant="outlined"
-                                onClick={handleAddTodo}
+                                onClick={() => {
+                                    todoSave()
+                                }}
                             >
                                 Save
                             </Button>
                         </Container>
-                    )}
-                    <TodoList />
+                        : undefined}
+                    <TodoList/>
                 </>
-            ) : (
-                <SignUpForm />
-            )}
+                : <SignUpForm/>
+            }
         </>
     )
 }

@@ -1,17 +1,18 @@
-import AppBar from "@mui/material/AppBar"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import MenuIcon from "@mui/icons-material/Menu"
-import Typography from "@mui/material/Typography"
-import SearchIcon from "@mui/icons-material/Search"
-import Box from "@mui/material/Box"
-import { alpha, styled } from "@mui/material/styles"
-import InputBase from "@mui/material/InputBase"
-import { useSelector } from "react-redux"
-import { selectTodos } from "../../entities/todo/model/todoSlice.ts"
-import { selectUser } from "../../entities/user/model/userSlice.ts"
 
-const Search = styled('div')(({ theme }) => ({
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
+import SearchIcon from "@mui/icons-material/Search";
+import Box from "@mui/material/Box";
+import {alpha, styled} from "@mui/material/styles";
+import InputBase from "@mui/material/InputBase";
+import {useSelector} from "react-redux";
+import {selectUser} from "../../entities/user/model/userSlice.ts";
+import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
+
+const Search = styled('div')(({theme}) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -24,9 +25,9 @@ const Search = styled('div')(({ theme }) => ({
         marginLeft: theme.spacing(1),
         width: 'auto',
     },
-}))
+}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled('div')(({theme}) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -34,13 +35,14 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-}))
+}));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     width: '100%',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         [theme.breakpoints.up('sm')]: {
@@ -50,14 +52,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             },
         },
     },
-}))
+}));
 
-export const ToolBar = () => {
+type TTollbarProps = {
+    isLoggedIn: boolean,
+}
+
+export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
     const todos = useSelector(selectTodos)
     const user = useSelector(selectUser)
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -65,29 +71,37 @@ export const ToolBar = () => {
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
-                        sx={{ mr: 2 }}
+                        sx={{mr: 2}}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Typography
                         variant="h6"
                         noWrap
                         component="div"
-                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                        sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user ? `${user.username.toUpperCase()} HAS ${todos.length} TODOS:` : "TODO-VI"}
+                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                    </Typography>
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component="div"
+                        sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
+                    >
+                        {user && `HELLO, ${user.toUpperCase()}!`}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
-                            <SearchIcon />
+                            <SearchIcon/>
                         </SearchIconWrapper>
                         <StyledInputBase
                             placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
+                            inputProps={{'aria-label': 'search'}}
                         />
                     </Search>
                 </Toolbar>
             </AppBar>
         </Box>
-    )
-}
+    );
+};

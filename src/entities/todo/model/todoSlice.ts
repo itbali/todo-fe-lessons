@@ -1,64 +1,36 @@
-import { createSlice } from '@reduxjs/toolkit'
-
-type TTodo = {
-    _id: string,
-    title: string,
-    completed: boolean,
-    description: string,
-    createdAt: string,
-    updatedAt: string
-}
+import {createSlice} from '@reduxjs/toolkit'
+import {TTodoItem} from "./todoItem.type.ts";
+import {testTodo} from "./todoArray.ts";
 
 type TTodoSlice = {
-    todos: TTodo[],
-    error: string,
+    todos: TTodoItem[],
+    error: string
 }
 
-const initialTodoState:TTodoSlice = {
-    todos: [{
-        _id: "id1",
-        title: "title1",
-        completed: false,
-        description: "description1",
-        createdAt: "2024-08-21T12:00:00Z",
-        updatedAt: "2024-08-21T12:00:00Z"
-    },
-        {
-            _id: "id2",
-            title: "title2",
-            completed: false,
-            description: "description2",
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        }],
+const initialTodoState: TTodoSlice = {
+    todos: testTodo,
     error: '',
 }
 
-export const todosSlice = createSlice({
-    name: 'todos',
+export const todoSlice = createSlice({
+    name: 'todo',
     initialState: initialTodoState,
     reducers: {
-        addTodo: (state, action) => {
-            state.todos.push(action.payload)
+        setAddTodo: (state, action) => {
+            state.todos = [...state.todos, action.payload]
         },
-        toggleTodo: (state, action) => {
-            const todo = state.todos.find(todo => todo._id === action.payload)
-            if (todo) {
-                todo.completed = !todo.completed
-            }
+        setDeleteTodo: (state, action) => {
+            state.todos = state.todos.filter(t => t._id !== action.payload._id)
         },
-        removeTodo: (state, action) => {
-            state.todos = state.todos.filter(todo => todo._id !== action.payload)
-        },
-        setError: (state, action) => {
-            state.error = action.payload
+        setUpdateTodo: (state, action) => {
+            state.todos = state.todos.map(t => t._id === action.payload._id ? action.payload : t)
         }
     },
     selectors: {
-        selectTodos: state => state.todos,
-        selectError: state => state.error,
+        selectTodos: (state) => state.todos,
+        selectError: (state) => state.error
     }
 })
 
-export const { addTodo, toggleTodo, removeTodo, setError } = todosSlice.actions;
-export const { selectTodos, selectError } = todosSlice.selectors;
+export const {setAddTodo, setUpdateTodo, setDeleteTodo} = todoSlice.actions
+export const {selectTodos, selectError} = todoSlice.selectors

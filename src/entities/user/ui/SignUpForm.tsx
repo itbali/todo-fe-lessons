@@ -1,28 +1,25 @@
-import {useState} from "react";
-
-import IconButton from "@mui/material/IconButton";
-import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
+import {Button, ButtonGroup, Container, TextField} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
+import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import {Button, ButtonGroup, Container, TextField} from "@mui/material";
-
-import { useDispatch} from 'react-redux'
-
+import Visibility from "@mui/icons-material/Visibility";
+import React, {useState} from "react";
 import {axiosBase} from "../../../shared/util/axios.ts";
+
+import {useDispatch} from 'react-redux'
 import {setIsLoggedIn, setUser} from "../model/userSlice.ts";
 
 const SignUpForm = () => {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const [showPassword, setShowPassword] = useState(false);
     const [registration, setRegistration] = useState<boolean>(false)
+    const [disabledButton, setDisabledButton] = useState<boolean>(false)
 
-    const dispatch = useDispatch();
-
+    const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -31,23 +28,28 @@ const SignUpForm = () => {
         event.preventDefault();
     };
 
-    const checkLogin = async () => {
-        try {
-            const response = await axiosBase.post<{access_token:string, username: string}>('auth/login', {username, password})
+    const dispatch = useDispatch()
 
-            if(response.status === 201 || response.status === 200){
-                dispatch(setUser(response.data))
+    const checkLogin = async () => {
+        setDisabledButton(true)
+        try {
+            const response = await axiosBase.post<{ access_token: string, username: string }>
+            ('auth/login', {username, password})
+
+            if (response.status === 201 || response.status === 200) {
                 dispatch(setIsLoggedIn(true))
-            }else{
+                dispatch(setUser(response.data.username))
+            } else {
+                setDisabledButton(false)
                 dispatch(setIsLoggedIn(false))
             }
-
 
             if (response.status === 401) {
                 throw Error('Status Code 401\nThis user does not exist!');
             } else if (response.status === 404) {
                 throw Error('Status Code 404\nThe page was not found.');
             }
+
             console.log(response.status)
         } catch (e) {
             console.warn(e)
@@ -58,13 +60,19 @@ const SignUpForm = () => {
         try {
             const response = await axiosBase.post('auth/register', {username, password})
 
-            response.status === 201 ? setRegistration(true) : setRegistration(false);
+            if (response.status === 201 || response.status === 200) {
+                setRegistration(true)
+            } else {
+                setRegistration(false)
+            }
 
             if (response.status === 409) {
                 throw Error('Status Code 409\nThis user already exists!');
             } else if (response.status === 404) {
                 throw Error('Status Code 404\nThe page was not found.');
             }
+
+            console.log(response.status)
         } catch (e) {
             console.warn(e)
         }
@@ -83,7 +91,6 @@ const SignUpForm = () => {
                 onChange={(e) => {
                     setUsername(e.target.value)
                 }}/>
-
             <FormControl sx={{width: '100%'}} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                 <OutlinedInput
@@ -111,6 +118,7 @@ const SignUpForm = () => {
             </FormControl>
             <ButtonGroup fullWidth={true}>
                 <Button
+                    disabled={disabledButton}
                     variant="outlined"
                     onClick={() => {
                         checkLogin()
@@ -118,8 +126,8 @@ const SignUpForm = () => {
                 >
                     Login
                 </Button>
-                {!registration
-                    ? <Button variant="outlined" onClick={() => {
+                {!registration ?
+                    <Button variant="outlined" disabled={disabledButton} onClick={() => {
                         checkRegistration()
                     }}
                     >Registration
