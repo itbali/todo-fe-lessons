@@ -28,9 +28,10 @@ export const todoSlice = createSlice({
     },
     selectors: {
         selectTodos: (state) => state.todos,
+        selectTodoById: (state, id)=> state.todos.find(t => t._id === id),
         selectError: (state) => state.error
     }
 })
 
 export const {setAddTodo, setUpdateTodo, setDeleteTodo} = todoSlice.actions
-export const {selectTodos, selectError} = todoSlice.selectors
+export const {selectTodos, selectError, selectTodoById} = todoSlice.selectors

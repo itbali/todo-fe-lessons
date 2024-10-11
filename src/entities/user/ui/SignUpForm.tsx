@@ -38,7 +38,7 @@ const SignUpForm = () => {
 
             if (response.status === 201 || response.status === 200) {
                 dispatch(setIsLoggedIn(true))
-                dispatch(setUser(response.data.username))
+                dispatch(setUser(response.data))
             } else {
                 setDisabledButton(false)
                 dispatch(setIsLoggedIn(false))

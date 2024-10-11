@@ -11,6 +11,10 @@ import InputBase from "@mui/material/InputBase";
 import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
+import {NavLink} from "react-router-dom";
+import {Help, Home, Person} from "@mui/icons-material";
+import {Routes} from "../constants/routes.ts";
+
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -54,11 +58,17 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
 }));
 
-type TTollbarProps = {
-    isLoggedIn: boolean,
+const activeStyle = {
+    color: 'white',
+    marginRight: '10px',
+    borderBottom: '1px solid white',
+}
+const inactiveStyle = {
+    color: 'white',
+    marginRight: '10px'
 }
 
-export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
+export const ToolBar = () => {
     const todos = useSelector(selectTodos)
     const user = useSelector(selectUser)
 
@@ -66,6 +76,7 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
+
                     <IconButton
                         size="large"
                         edge="start"
@@ -81,7 +92,7 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                        {user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Typography
                         variant="h5"
@@ -89,8 +100,18 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user && `HELLO, ${user.toUpperCase()}!`}
+                        {user && `HELLO, ${user.username.toUpperCase()}!`}
                     </Typography>
+                    <NavLink to={Routes.Home}
+                             style={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}>
+                        <Home />
+                    </NavLink>
+                    <NavLink to={Routes.About} style={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}>
+                        <Help />
+                    </NavLink>
+                    <NavLink to={Routes.Profile} style={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}>
+                        <Person />
+                    </NavLink>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon/>
