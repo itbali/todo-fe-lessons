@@ -1,9 +1,8 @@
 import {TTodoItem} from "./todoItem.type.ts";
 
-
 export const testTodo:TTodoItem[] = [
     {
-        _id: "id1",
+        _id: 1,
         title: "title1",
         completed: false,
         description: "description1",
@@ -11,7 +10,7 @@ export const testTodo:TTodoItem[] = [
         updatedAt: "2024-08-21T12:00:00Z"
     },
     {
-        _id: "id2",
+        _id: 2,
         title: "title2",
         completed: false,
         description: "description2",
