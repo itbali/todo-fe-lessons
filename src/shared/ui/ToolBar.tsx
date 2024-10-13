@@ -1,7 +1,6 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
@@ -10,6 +9,8 @@ import InputBase from "@mui/material/InputBase";
 import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
+import {NavLink} from "react-router-dom";
+import {Help} from "@mui/icons-material";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -65,15 +66,18 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
+                    {/*<IconButton*/}
+                    {/*    size="large"*/}
+                    {/*    edge="start"*/}
+                    {/*    color="inherit"*/}
+                    {/*    aria-label="open drawer"*/}
+                    {/*    sx={{mr: 2}}*/}
+                    {/*>*/}
+                    {/*    <MenuIcon/>*/}
+                    {/*</IconButton>*/}
+                    <NavLink to={'/about/'}>
+                        <IconButton style={{color: 'white'}}><Help/></IconButton>
+                    </NavLink>
                     <Typography
                         variant="h6"
                         noWrap
