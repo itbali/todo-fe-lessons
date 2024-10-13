@@ -10,7 +10,7 @@ import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 import {NavLink} from "react-router-dom";
-import {Help} from "@mui/icons-material";
+import {Help, Home} from "@mui/icons-material";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -66,17 +66,11 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    {/*<IconButton*/}
-                    {/*    size="large"*/}
-                    {/*    edge="start"*/}
-                    {/*    color="inherit"*/}
-                    {/*    aria-label="open drawer"*/}
-                    {/*    sx={{mr: 2}}*/}
-                    {/*>*/}
-                    {/*    <MenuIcon/>*/}
-                    {/*</IconButton>*/}
                     <NavLink to={'/about/'}>
                         <IconButton style={{color: 'white'}}><Help/></IconButton>
+                    </NavLink>
+                    <NavLink to={'/'}>
+                        <IconButton style={{color: 'white'}}><Home/></IconButton>
                     </NavLink>
                     <Typography
                         variant="h6"
