@@ -11,6 +11,7 @@ import {TTodoItem} from "../model/todoItem.type.ts";
 import {useDispatch} from "react-redux";
 import {setDeleteTodo, setUpdateTodo} from "../model/todoSlice.ts";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 type TTodoItemProps = {
     value: TTodoItem,
@@ -24,6 +25,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const [changeTitle, setChangeTitle] = useState<string>('New Title')
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
     const [change, setChange] = useState<boolean>(false)
+
+    const navigate = useNavigate()
+    const handleTodoClick = () => {
+        navigate(`/todo/${value._id}/`)
+    }
 
     return (
         <Grid size={2} key={value._id}>
@@ -39,7 +45,12 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         }}>{<DeleteIcon/>}</Button>
                     </Typography>
                     <Typography sx={{color: 'text.secondary', mb: 1.5}}>ID: {value._id}</Typography>
-                    <Typography variant="h5" component="div" sx={change ? {display: 'none'} : {display: 'block'}}>
+                    <Typography
+                        variant="h5"
+                        component="div"
+                        sx={change ? {display: 'none'} : {display: 'block'}}
+                        onClick={handleTodoClick}
+                    >
                         {value.title}
                     </Typography>
                     <TextField

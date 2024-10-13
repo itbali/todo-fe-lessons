@@ -10,7 +10,7 @@ import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 import {NavLink} from "react-router-dom";
-import {Help, Home} from "@mui/icons-material";
+import {Help, Home, Person} from "@mui/icons-material";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -67,6 +67,9 @@ export const ToolBar = () => {
                     </NavLink>
                     <NavLink to={'/'}>
                         <IconButton style={{color: 'white'}}><Home/></IconButton>
+                    </NavLink>
+                    <NavLink to={'/profile/'}>
+                        <IconButton style={{color: 'white'}}><Person/></IconButton>
                     </NavLink>
                     <Typography
                         variant="h6"

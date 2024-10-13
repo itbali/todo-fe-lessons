@@ -6,6 +6,8 @@ import Login from "../pages/Login.tsx";
 import Layout from "../shared/ui/Layout.tsx";
 import ProtectedRoutes from "../shared/util/ProtectedRoutes.tsx";
 import App from "./App.tsx";
+import Profile from "../pages/Profile.tsx";
+import TodoPage from "../pages/TodoPage.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +21,14 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         element: <App/>,
+                    },
+                    {
+                        path: '/profile/',
+                        element: <Profile/>,
+                    },
+                    {
+                        path: '/todo/:id/',
+                        element: <TodoPage/>,
                     },
                 ]
             },

@@ -8,3 +8,5 @@ export const rootStore =  configureStore({
         [todoSlice.name]: todoSlice.reducer
     }
 })
+
+export type RootState = ReturnType<typeof rootStore.getState>
