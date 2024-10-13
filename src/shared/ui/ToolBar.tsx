@@ -54,11 +54,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
 }));
 
-type TTollbarProps = {
-    isLoggedIn: boolean,
-}
-
-export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
+export const ToolBar = () => {
     const todos = useSelector(selectTodos)
     const user = useSelector(selectUser)
 
@@ -78,7 +74,7 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                        {!!user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Typography
                         variant="h5"
@@ -86,7 +82,7 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user && `HELLO, ${user.toUpperCase()}!`}
+                        {user && `HELLO, ${user.username.toUpperCase()}!`}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
