@@ -5,7 +5,7 @@ const NotFound = () => {
     const navigate = useNavigate()
     setTimeout(() => {
         navigate('/')
-    }, 2000)
+    }, 3000)
 
     return (
         <Box
@@ -23,9 +23,8 @@ const NotFound = () => {
             <Typography variant="h6">
                 The page you’re looking for doesn’t exist.
             </Typography>
-            {/*<Button variant="contained" onClick={handleGoHome}>Back Home</Button>*/}
             <Typography variant="h6" style={{color: 'gray'}}>
-                You will be redirected to the Main page in 2 seconds.
+                You will be redirected to the Main page in 3 seconds.
             </Typography>
         </Box>
     );
