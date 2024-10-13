@@ -22,7 +22,7 @@ function App() {
     const todos = useSelector(selectTodos)
     const todoSave = () => {
         let createId: number = todos.length + 1
-        while(todos.filter(t => t._id === createId).length !== 0){
+        while (todos.filter(t => t._id === createId).length !== 0) {
             createId += 1
         }
         const add = {
