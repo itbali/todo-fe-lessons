@@ -63,13 +63,22 @@ export const ToolBar = () => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <NavLink to={Routes.About}>
+                    <NavLink to={Routes.About} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
                         <IconButton style={{color: 'white'}}><Help/></IconButton>
                     </NavLink>
-                    <NavLink to={Routes.Home}>
+                    <NavLink to={Routes.Home} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
                         <IconButton style={{color: 'white'}}><Home/></IconButton>
                     </NavLink>
-                    <NavLink to={Routes.Profile}>
+                    <NavLink to={Routes.Profile} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
                         <IconButton style={{color: 'white'}}><Person/></IconButton>
                     </NavLink>
                     <Typography
