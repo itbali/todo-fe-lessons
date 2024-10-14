@@ -1,7 +1,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import {Button, TextField} from "@mui/material";
+import {Button, ButtonGroup, TextField} from "@mui/material";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CardActions from "@mui/material/CardActions";
@@ -11,6 +11,8 @@ import {TTodoItem} from "../model/todoItem.type.ts";
 import {useDispatch} from "react-redux";
 import {setDeleteTodo, setUpdateTodo} from "../model/todoSlice.ts";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Routes} from "../../../shared/constants/routes.ts";
 
 type TTodoItemProps = {
     value: TTodoItem,
@@ -25,6 +27,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
     const [change, setChange] = useState<boolean>(false)
 
+    const navigate = useNavigate()
+    const handleTodoClick = () => {
+        navigate(Routes.TodoItem + value._id)
+    }
+
     return (
         <Grid size={2} key={value._id}>
             <Card sx={{border: '1px solid grey', width: 'max-content'}}>
@@ -38,8 +45,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             dispatch(setDeleteTodo({...value, _id: value._id}))
                         }}>{<DeleteIcon/>}</Button>
                     </Typography>
-                    <Typography sx={{color: 'text.secondary', mb: 1.5}}>ID: {value._id}</Typography>
-                    <Typography variant="h5" component="div" sx={change ? {display: 'none'} : {display: 'block'}}>
+                    <Typography
+                        variant="h4"
+                        component="div"
+                        sx={change ? {display: 'none'} : {display: 'block'}}
+                    >
                         {value.title}
                     </Typography>
                     <TextField
@@ -65,20 +75,30 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         }}
                     >
                     </TextField>
-                    <Button
-                        variant={'outlined'}
-                        sx={change ? {display: 'block'} : {display: 'none'}}
-                        onClick={() => {
-                            dispatch(setUpdateTodo({
-                                ...value,
-                                title: changeTitle, description: changeDescription
-                            }))
-                            setChangeTitle('New Title')
-                            setChangeDescription('New description...')
-                            setChange(!change)
-                        }}
-                    >Save
-                    </Button>
+                    <ButtonGroup fullWidth={true}>
+                        <Button
+                            variant={'outlined'}
+                            sx={change ? {display: 'block'} : {display: 'none'}}
+                            onClick={() => {
+                                dispatch(setUpdateTodo({
+                                    ...value,
+                                    title: changeTitle, description: changeDescription
+                                }))
+                                setChangeTitle('New Title')
+                                setChangeDescription('New description...')
+                                setChange(!change)
+                            }}
+                        >Save
+                        </Button>
+                        <Button
+                            variant={'outlined'}
+                            sx={change ? {display: 'block'} : {display: 'none'}}
+                            onClick={() => {
+                                setChange(!change)
+                            }}
+                        >Cancel
+                        </Button>
+                    </ButtonGroup>
                 </CardContent>
                 <CardActions>
                     <div>
@@ -88,6 +108,7 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             {<Checkbox {...label} checked={value.completed}/>}</Button>
                     </div>
                 </CardActions>
+                <Button onClick={handleTodoClick} variant={'contained'} fullWidth={true}>More detailed</Button>
             </Card>
         </Grid>
     );

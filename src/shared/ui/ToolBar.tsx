@@ -1,7 +1,6 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
@@ -10,6 +9,9 @@ import InputBase from "@mui/material/InputBase";
 import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
+import {NavLink} from "react-router-dom";
+import {Help, Home, Person} from "@mui/icons-material";
+import {Routes} from "../constants/routes.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -53,11 +55,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
 }));
 
-type TTollbarProps = {
-    isLoggedIn: boolean,
-}
-
-export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
+export const ToolBar = () => {
     const todos = useSelector(selectTodos)
     const user = useSelector(selectUser)
 
@@ -65,22 +63,31 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
+                    <NavLink to={Routes.About} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
+                        <IconButton style={{color: 'white'}}><Help/></IconButton>
+                    </NavLink>
+                    <NavLink to={Routes.Home} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
+                        <IconButton style={{color: 'white'}}><Home/></IconButton>
+                    </NavLink>
+                    <NavLink to={Routes.Profile} style={({isActive}) => ({
+                        background: isActive ? 'rgba(255, 255, 255, 0.3)' : '',
+                        borderRadius: isActive ? '50%' : ''
+                    })}>
+                        <IconButton style={{color: 'white'}}><Person/></IconButton>
+                    </NavLink>
                     <Typography
                         variant="h6"
                         noWrap
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {isLoggedIn ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                        {user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Typography
                         variant="h5"
@@ -88,7 +95,7 @@ export const ToolBar = ({isLoggedIn}: TTollbarProps) => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user && `HELLO, ${user.toUpperCase()}!`}
+                        {user && `HELLO, ${user.username.toUpperCase()}!`}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
