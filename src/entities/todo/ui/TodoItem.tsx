@@ -1,7 +1,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import {Button, TextField} from "@mui/material";
+import {Button, ButtonGroup, TextField} from "@mui/material";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CardActions from "@mui/material/CardActions";
@@ -45,12 +45,10 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             dispatch(setDeleteTodo({...value, _id: value._id}))
                         }}>{<DeleteIcon/>}</Button>
                     </Typography>
-                    <Typography sx={{color: 'text.secondary', mb: 1.5}}>ID: {value._id}</Typography>
                     <Typography
-                        variant="h5"
+                        variant="h4"
                         component="div"
                         sx={change ? {display: 'none'} : {display: 'block'}}
-                        onClick={handleTodoClick}
                     >
                         {value.title}
                     </Typography>
@@ -77,20 +75,30 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         }}
                     >
                     </TextField>
-                    <Button
-                        variant={'outlined'}
-                        sx={change ? {display: 'block'} : {display: 'none'}}
-                        onClick={() => {
-                            dispatch(setUpdateTodo({
-                                ...value,
-                                title: changeTitle, description: changeDescription
-                            }))
-                            setChangeTitle('New Title')
-                            setChangeDescription('New description...')
-                            setChange(!change)
-                        }}
-                    >Save
-                    </Button>
+                    <ButtonGroup fullWidth={true}>
+                        <Button
+                            variant={'outlined'}
+                            sx={change ? {display: 'block'} : {display: 'none'}}
+                            onClick={() => {
+                                dispatch(setUpdateTodo({
+                                    ...value,
+                                    title: changeTitle, description: changeDescription
+                                }))
+                                setChangeTitle('New Title')
+                                setChangeDescription('New description...')
+                                setChange(!change)
+                            }}
+                        >Save
+                        </Button>
+                        <Button
+                            variant={'outlined'}
+                            sx={change ? {display: 'block'} : {display: 'none'}}
+                            onClick={() => {
+                                setChange(!change)
+                            }}
+                        >Cancel
+                        </Button>
+                    </ButtonGroup>
                 </CardContent>
                 <CardActions>
                     <div>
@@ -100,6 +108,7 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             {<Checkbox {...label} checked={value.completed}/>}</Button>
                     </div>
                 </CardActions>
+                <Button onClick={handleTodoClick} variant={'contained'} fullWidth={true}>More detailed</Button>
             </Card>
         </Grid>
     );

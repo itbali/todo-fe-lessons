@@ -1,18 +1,21 @@
 import {useSelector} from "react-redux";
 import {selectUser} from "../model/userSlice.ts";
-import {Person} from "@mui/icons-material";
+import {AccountBox} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const UserInfo = () => {
     const user = useSelector(selectUser)
 
     return (
         <>
-            <Person/>
-            <Typography>
-                {user?.username}
-            </Typography>
-            <p>Your token: {user?.access_token}</p>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <AccountBox sx={{fontSize: '100px'}}/>
+                <Typography variant={'h5'}>
+                    Name: {user?.username}
+                </Typography>
+            </Box>
+            <Typography variant={'body1'}>Your token: {user?.access_token}</Typography>
         </>
     );
 };
