@@ -12,6 +12,7 @@ import {useDispatch} from "react-redux";
 import {setDeleteTodo, setUpdateTodo} from "../model/todoSlice.ts";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {Routes} from "../../../shared/constants/routes.ts";
 
 type TTodoItemProps = {
     value: TTodoItem,
@@ -28,7 +29,7 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
 
     const navigate = useNavigate()
     const handleTodoClick = () => {
-        navigate(`/todo/${value._id}/`)
+        navigate(Routes.TodoItem + value._id)
     }
 
     return (

@@ -8,10 +8,11 @@ import ProtectedRoutes from "../shared/util/ProtectedRoutes.tsx";
 import App from "./App.tsx";
 import Profile from "../pages/Profile.tsx";
 import TodoPage from "../pages/TodoPage.tsx";
+import {Routes} from "../shared/constants/routes.ts";
 
 export const router = createBrowserRouter([
     {
-        path: "/",
+        path: Routes.Home,
         element: <Layout/>,
         errorElement: <ErrorPage/>,
         children: [
@@ -23,25 +24,25 @@ export const router = createBrowserRouter([
                         element: <App/>,
                     },
                     {
-                        path: '/profile/',
+                        path: Routes.Profile,
                         element: <Profile/>,
                     },
                     {
-                        path: '/todo/:id/',
+                        path: Routes.Todo,
                         element: <TodoPage/>,
                     },
                 ]
             },
             {
-                path: "/about/",
+                path: Routes.About,
                 element: <About/>,
             },
             {
-                path: "/login/",
+                path: Routes.Login,
                 element: <Login/>,
             },
             {
-                path: "*",
+                path: Routes.NotFound,
                 element: <NotFound/>,
             },
         ]

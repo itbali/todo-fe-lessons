@@ -11,6 +11,7 @@ import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 import {NavLink} from "react-router-dom";
 import {Help, Home, Person} from "@mui/icons-material";
+import {Routes} from "../constants/routes.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -62,13 +63,13 @@ export const ToolBar = () => {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <NavLink to={'/about/'}>
+                    <NavLink to={Routes.About}>
                         <IconButton style={{color: 'white'}}><Help/></IconButton>
                     </NavLink>
-                    <NavLink to={'/'}>
+                    <NavLink to={Routes.Home}>
                         <IconButton style={{color: 'white'}}><Home/></IconButton>
                     </NavLink>
-                    <NavLink to={'/profile/'}>
+                    <NavLink to={Routes.Profile}>
                         <IconButton style={{color: 'white'}}><Person/></IconButton>
                     </NavLink>
                     <Typography
@@ -77,7 +78,7 @@ export const ToolBar = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {!!user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                        {user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Typography
                         variant="h5"
