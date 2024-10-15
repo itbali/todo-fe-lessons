@@ -14,8 +14,8 @@ function App() {
     const [description, setDescription] = useState<string>('')
 
     const dispatch = useDispatch()
-
     const todos = useSelector(selectTodos)
+
     const todoSave = () => {
         let createId = todos.length + 1
         while (todos.filter(t => t._id === createId.toString()).length !== 0) {

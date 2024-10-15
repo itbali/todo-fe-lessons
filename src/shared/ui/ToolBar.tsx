@@ -10,8 +10,10 @@ import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
 import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 import {NavLink} from "react-router-dom";
-import {Help, Home, Person} from "@mui/icons-material";
+import {DarkMode, Help, Home, LightMode, Person} from "@mui/icons-material";
 import {Routes} from "../constants/routes.ts";
+import {Button} from "@mui/material";
+import {useThemeStore} from "../../app/themeContext.tsx";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -58,6 +60,11 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 export const ToolBar = () => {
     const todos = useSelector(selectTodos)
     const user = useSelector(selectUser)
+
+    const {theme, setTheme} = useThemeStore()
+    const themeHandler = () => {
+        setTheme('dark')
+    }
 
     return (
         <Box sx={{flexGrow: 1}}>
@@ -106,6 +113,9 @@ export const ToolBar = () => {
                             inputProps={{'aria-label': 'search'}}
                         />
                     </Search>
+                    <Button variant={'contained'} onClick={themeHandler}>
+                        {theme === 'light' ? <LightMode/> : <DarkMode/>}
+                    </Button>
                 </Toolbar>
             </AppBar>
         </Box>

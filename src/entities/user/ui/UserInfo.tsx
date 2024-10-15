@@ -15,7 +15,7 @@ const UserInfo = () => {
                     Name: {user?.username}
                 </Typography>
             </Box>
-            <Typography variant={'body1'}>Your token: {user?.access_token}</Typography>
+            <Typography>Your token: {user?.access_token}</Typography>
         </>
     );
 };
