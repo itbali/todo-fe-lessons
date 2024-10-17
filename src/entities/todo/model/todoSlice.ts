@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {TTodoItem} from "./todoItem.type.ts";
-import {testTodo} from "./todoArray.ts";
 
 type TTodoSlice = {
     todos: TTodoItem[],
@@ -8,7 +7,7 @@ type TTodoSlice = {
 }
 
 const initialTodoState: TTodoSlice = {
-    todos: testTodo,
+    todos: [],
     error: '',
 }
 
@@ -24,6 +23,9 @@ export const todoSlice = createSlice({
         },
         setUpdateTodo: (state, action) => {
             state.todos = state.todos.map(t => t._id === action.payload._id ? action.payload : t)
+        },
+        setTodos: (state, action) => {
+            state.todos = action.payload
         }
     },
     selectors: {
@@ -32,5 +34,5 @@ export const todoSlice = createSlice({
     }
 })
 
-export const {setAddTodo, setUpdateTodo, setDeleteTodo} = todoSlice.actions
+export const {setAddTodo, setUpdateTodo, setDeleteTodo, setTodos} = todoSlice.actions
 export const {selectTodos, selectError} = todoSlice.selectors
