@@ -18,8 +18,8 @@ const SignUpForm = () => {
     const [password, setPassword] = useState<string>('')
     const [registration, setRegistration] = useState<boolean>(false)
     const [disabledButton, setDisabledButton] = useState<boolean>(false)
-
     const [showPassword, setShowPassword] = useState(false);
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -34,20 +34,21 @@ const SignUpForm = () => {
         setDisabledButton(true)
         try {
             const response = await axiosBase.post<{ access_token: string, username: string }>
-            ('auth/login', {username, password})
+            ('/auth/login/', {username, password})
 
             if (response.status === 201 || response.status === 200) {
                 dispatch(setIsLoggedIn(true))
                 dispatch(setUser(response.data))
+                localStorage.setItem('token', response.data.access_token)
             } else {
                 setDisabledButton(false)
                 dispatch(setIsLoggedIn(false))
             }
 
             if (response.status === 401) {
-                throw Error('Status Code 401\nThis user does not exist!');
+                throw Error('Status Code 401. This user does not exist!');
             } else if (response.status === 404) {
-                throw Error('Status Code 404\nThe page was not found.');
+                throw Error('Status Code 404. The page was not found.');
             }
 
             console.log(response.status)
@@ -67,9 +68,9 @@ const SignUpForm = () => {
             }
 
             if (response.status === 409) {
-                throw Error('Status Code 409\nThis user already exists!');
+                throw Error('Status Code 409. This user already exists!');
             } else if (response.status === 404) {
-                throw Error('Status Code 404\nThe page was not found.');
+                throw Error('Status Code 404. The page was not found.');
             }
 
             console.log(response.status)

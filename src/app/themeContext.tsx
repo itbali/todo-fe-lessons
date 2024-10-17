@@ -23,10 +23,13 @@ export const ThemeProvider = ({children}: { children: ReactNode }) => {
 
     const StyledTheme = styled('div')(() => ({
         color: theme === 'dark' ? 'white' : '',
-        backgroundColor: theme === 'dark' ? 'black' : '',
+        backgroundColor: theme === 'dark' ? 'rgb(4, 7, 23)' : '',
         height: '100vh',
         '& div': {
             backgroundColor: theme === 'dark' ? 'rgb(21, 101, 192, 0.3)' : '',
+            color: theme === 'dark' ? 'white' : '',
+        },
+        '& button': {
             color: theme === 'dark' ? 'white' : '',
         }
     }))
