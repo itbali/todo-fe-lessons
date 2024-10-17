@@ -5,7 +5,7 @@ export const axiosBase = axios.create({
 })
 
 axiosBase.interceptors.request.use(
-    (config) => {
+    config => {
         const token = `Bearer ${localStorage.getItem('token')}`
         if (token) {
             config.headers.Authorization = token

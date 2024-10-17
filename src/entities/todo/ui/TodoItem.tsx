@@ -8,62 +8,47 @@ import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid2";
 import {TTodoItem} from "../model/todoItem.type.ts";
-import {useDispatch} from "react-redux";
-import {setUpdateTodo} from "../model/todoSlice.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Routes} from "../../../shared/constants/routes.ts";
-import {axiosBase} from "../../../shared/util/axios.ts";
 import {useSnackbar} from "notistack";
+import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
 
 type TTodoItemProps = {
     value: TTodoItem;
     index: number;
-    getTodos: () => void;
 }
 
-const TodoItem = ({value, index, getTodos}: TTodoItemProps) => {
+const TodoItem = ({value, index}: TTodoItemProps) => {
     const label = {inputProps: {'aria-label': 'Checkbox demo'}};
 
-    const dispatch = useDispatch()
     const navigate = useNavigate()
     const {enqueueSnackbar} = useSnackbar();
+
+    const [deleteTodo, {data, isLoading, isSuccess}] = useDeleteTodosMutation()
+    const [updateTodo] = useUpdateTodosMutation()
+    const [changeTodo] = useChangeTodosMutation()
 
     const [changeTitle, setChangeTitle] = useState<string>('New Title')
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
     const [change, setChange] = useState<boolean>(false)
-    const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
     const handleTodoClick = () => {
         navigate(Routes.TodoItem + value._id)
     }
 
-    const handleDeleteTodo = () => {
-        setIsDeleting(true)
-        axiosBase.delete<TTodoItem[]>(`/todos/${value._id}/`).then(response => {
-            getTodos()
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            enqueueSnackbar(`ToDo ${response.data.title} was deleted`, {
-                variant: 'success',
-                autoHideDuration: 3000
-            })
-        }).catch((e) => {
-            enqueueSnackbar(`Error: ${e}`, {
-                variant: 'error',
-                autoHideDuration: 3000
-            })
-        }).finally(() => {
-            setIsDeleting(false)
-        })
-    }
+    useEffect(() => {
+        if (isSuccess) {
+            enqueueSnackbar(`The ToDo ${data.title} has been deleted`, {variant: 'success'})
+        }
+    }, [data?.title, enqueueSnackbar, isSuccess]);
 
-    if (isDeleting) {
+    if (isLoading) {
         return <CircularProgress/>
     }
 
     return (
-        <Grid size={2} key={value._id}>
+        <Grid size={4} key={value._id}>
             <Card sx={{border: '1px solid grey', width: 'max-content'}}>
                 <CardContent>
                     <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
@@ -72,7 +57,7 @@ const TodoItem = ({value, index, getTodos}: TTodoItemProps) => {
                     <ButtonGroup fullWidth={true} variant={'text'}>
                         <Button onClick={() => setChange(!change)}>{<ModeEditOutlineIcon/>}</Button>
                         <Button onClick={() => {
-                            handleDeleteTodo()
+                            deleteTodo(value._id)
                         }}>{<DeleteIcon/>}</Button>
                     </ButtonGroup>
                     <Typography
@@ -110,10 +95,7 @@ const TodoItem = ({value, index, getTodos}: TTodoItemProps) => {
                             variant={'outlined'}
                             sx={change ? {display: 'block'} : {display: 'none'}}
                             onClick={() => {
-                                dispatch(setUpdateTodo({
-                                    ...value,
-                                    title: changeTitle, description: changeDescription
-                                }))
+                                changeTodo({id: value._id, title: changeTitle, description: changeDescription})
                                 setChangeTitle('New Title')
                                 setChangeDescription('New description...')
                                 setChange(!change)
@@ -132,8 +114,11 @@ const TodoItem = ({value, index, getTodos}: TTodoItemProps) => {
                 </CardContent>
                 <CardActions>
                     <div>
-                        <Button size="small" onClick={() => {
-                            dispatch(setUpdateTodo({...value, completed: !value.completed}))
+                        <Button disabled={isLoading} size="small" onClick={() => {
+                            updateTodo({
+                                id: value._id,
+                                completed: !value.completed,
+                            })
                         }}>{value.completed ? 'Success' : 'Todo'}
                             {<Checkbox {...label} checked={value.completed}/>}</Button>
                     </div>

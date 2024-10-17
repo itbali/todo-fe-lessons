@@ -8,12 +8,12 @@ import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import {useSelector} from "react-redux";
 import {selectUser} from "../../entities/user/model/userSlice.ts";
-import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
 import {NavLink} from "react-router-dom";
 import {DarkMode, Help, Home, LightMode, Person} from "@mui/icons-material";
 import {Routes} from "../constants/routes.ts";
 import {Button} from "@mui/material";
 import {useThemeStore} from "../../app/themeContext.tsx";
+import {selectQueryTodos} from "../../entities/todo/model/selectors/selectQueryTodos.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 export const ToolBar = () => {
-    const todos = useSelector(selectTodos)
+    const {data: todos} = useSelector(selectQueryTodos)
     const user = useSelector(selectUser)
 
     const {theme, setTheme} = useThemeStore()
@@ -94,7 +94,7 @@ export const ToolBar = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user ? `TOTAL TODOS: ${todos.filter(t => !t.completed).length}` : "TODO-VI"}
+                        {user ? `TOTAL TODOS: ${todos?.filter(t => !t.completed).length}` : "TODO-VI"}
                     </Typography>
                     <Typography
                         variant="h5"

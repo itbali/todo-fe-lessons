@@ -1,39 +1,29 @@
 import Typography from '@mui/material/Typography';
 import {Button, Container, TextField} from "@mui/material";
-
 import AddIcon from '@mui/icons-material/Add';
-
 import TodoList from "../entities/todo/ui/TodoList.tsx";
-import {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {selectTodos, setAddTodo} from "../entities/todo/model/todoSlice.ts";
+import {useEffect, useState} from "react";
+import {useCreateTodosMutation} from "../entities/todo/api/todosApi.ts";
+import {enqueueSnackbar} from "notistack";
 
 function App() {
     const [title, setTitle] = useState<string>('')
     const [addTodoView, setAddTodoView] = useState<boolean>(false)
     const [description, setDescription] = useState<string>('')
 
-    const dispatch = useDispatch()
-    const todos = useSelector(selectTodos)
+    const [addTodo, {isLoading, isSuccess, data}] = useCreateTodosMutation()
 
     const todoSave = () => {
-        let createId = todos.length + 1
-        while (todos.filter(t => t._id === createId.toString()).length !== 0) {
-            createId += 1
-        }
-        const todoId = createId.toString()
-        const add = {
-            _id: todoId,
-            title: title,
-            completed: false,
-            description: description,
-            createdAt: "2024-08-21T12:00:00Z",
-            updatedAt: "2024-08-21T12:00:00Z"
-        }
-        dispatch(setAddTodo(add))
+        addTodo({title, description})
         setTitle('')
         setDescription('')
     }
+
+    useEffect(() => {
+        if (isSuccess) {
+            enqueueSnackbar(`The ToDo ${data.title} has been added`, {variant: 'success'})
+        }
+    }, [data?.title, enqueueSnackbar, isSuccess]);
 
     return (
         <>
@@ -67,6 +57,7 @@ function App() {
                         }}/>
                     <br/>
                     <Button
+                        disabled={isLoading}
                         fullWidth={true}
                         variant="outlined"
                         onClick={() => {
