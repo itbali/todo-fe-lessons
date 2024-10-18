@@ -1,9 +1,8 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {selectTodoById} from "../entities/todo/model/selectors/selectById.ts";
-import {useSelector} from "react-redux";
-import {Button} from "@mui/material";
+import {Button, CircularProgress} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import {useGetTodosInfoQuery} from "../entities/todo/api/todosApi.ts";
 
 const TodoPage = () => {
     const navigate = useNavigate()
@@ -12,8 +11,13 @@ const TodoPage = () => {
     }
 
     const params = useParams();
-    const todo = useSelector(selectTodoById(params.id))
-    if (!todo) return <div>ToDo not found</div>;
+    const {data: todo, isLoading} = useGetTodosInfoQuery(params.id!, {skip: !params.id})
+
+    if (isLoading) {
+        return <Box sx={{textAlign: 'center'}}><CircularProgress/></Box>
+    }
+
+    if (!todo || !params.id) return <div>ToDo not found</div>;
 
     return (
         <>

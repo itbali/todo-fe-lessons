@@ -25,9 +25,9 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const navigate = useNavigate()
     const {enqueueSnackbar} = useSnackbar();
 
-    const [deleteTodo, {data, isLoading, isSuccess}] = useDeleteTodosMutation()
-    const [updateTodo] = useUpdateTodosMutation()
-    const [changeTodo] = useChangeTodosMutation()
+    const [deleteTodo, deleteInfo] = useDeleteTodosMutation()
+    const [updateTodo, updateInfo] = useUpdateTodosMutation()
+    const [changeTodo, changeInfo] = useChangeTodosMutation()
 
     const [changeTitle, setChangeTitle] = useState<string>('New Title')
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
@@ -38,12 +38,18 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     }
 
     useEffect(() => {
-        if (isSuccess) {
-            enqueueSnackbar(`The ToDo ${data.title} has been deleted`, {variant: 'success'})
+        if (deleteInfo.isSuccess) {
+            enqueueSnackbar(`The ToDo ${deleteInfo.data.title} has been deleted`, {variant: 'success'})
         }
-    }, [data?.title, enqueueSnackbar, isSuccess]);
+    }, [deleteInfo.data?.title, enqueueSnackbar, deleteInfo.isSuccess]);
 
-    if (isLoading) {
+    useEffect(() => {
+        if (changeInfo.isSuccess) {
+            enqueueSnackbar('The ToDo has been changed', {variant: 'success'})
+        }
+    }, [enqueueSnackbar, changeInfo.isSuccess]);
+
+    if (deleteInfo.isLoading) {
         return <CircularProgress/>
     }
 
@@ -114,13 +120,13 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                 </CardContent>
                 <CardActions>
                     <div>
-                        <Button disabled={isLoading} size="small" onClick={() => {
+                        <Button disabled={updateInfo.isLoading} size="small" onClick={() => {
                             updateTodo({
                                 id: value._id,
                                 completed: !value.completed,
                             })
                         }}>{value.completed ? 'Success' : 'Todo'}
-                            {<Checkbox {...label} checked={value.completed}/>}</Button>
+                            {<Checkbox {...label} checked={value.completed} disabled={updateInfo.isLoading}/>}</Button>
                     </div>
                 </CardActions>
                 <Button onClick={handleTodoClick} variant={'contained'} fullWidth={true}>More detailed</Button>
