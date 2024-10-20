@@ -6,8 +6,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import {useSelector} from "react-redux";
-import {selectUser} from "../../entities/user/model/userSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {logout, selectUser} from "../../entities/user/model/userSlice.ts";
 import {NavLink} from "react-router-dom";
 import {DarkMode, Help, Home, LightMode, Person} from "@mui/icons-material";
 import {Routes} from "../constants/routes.ts";
@@ -60,6 +60,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 export const ToolBar = () => {
     const {data: todos} = useSelector(selectQueryTodos)
     const user = useSelector(selectUser)
+    const dispatch = useDispatch()
 
     const {theme, setTheme} = useThemeStore()
     const themeHandler = () => {
@@ -102,7 +103,7 @@ export const ToolBar = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        {user && `HELLO, ${user.username.toUpperCase()}!`}
+                        {user?.username && `HELLO, ${user.username.toUpperCase()}!`}
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
@@ -116,6 +117,15 @@ export const ToolBar = () => {
                     <Button variant={'contained'} onClick={themeHandler}>
                         {theme === 'light' ? <LightMode/> : <DarkMode/>}
                     </Button>
+                    {user?.username &&
+                        <Button
+                            variant="contained"
+                            onClick={() => {
+                                dispatch(logout())
+                                localStorage.removeItem('token')
+                            }}>Logout
+                        </Button>
+                    }
                 </Toolbar>
             </AppBar>
         </Box>
