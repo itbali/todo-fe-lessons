@@ -7,7 +7,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import useTodosStore from "../../entities/todo/model/todoStore.ts";
+import {selectTodos} from "../../entities/todo/model/todoSlice.ts";
+import {useSelector} from "react-redux";
+import {selectUser} from "../../entities/user/model/userSlice.ts";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -50,12 +52,13 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 type TTollbarProps = {
-    isLoggedIn: boolean,
-    amount: number
+    isLoggedIn: boolean
 }
 
 export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
-    const todos = useTodosStore(state => state.todos)
+    const todos = useSelector(selectTodos)
+    const user = useSelector(selectUser)
+
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -69,6 +72,9 @@ export const ToolBar = ({ isLoggedIn}:TTollbarProps) => {
                     >
                         <MenuIcon/>
                     </IconButton>
+                    {user?.username &&
+                        <span>{user?.username} has total </span>
+                    }
                     <Typography
                         variant="h6"
                         noWrap

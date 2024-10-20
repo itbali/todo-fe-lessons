@@ -8,7 +8,8 @@ import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid2";
 import {TTodoItem} from "../model/todoItem.type.ts";
-import useTodosStore, {TodoState} from "../model/todoStore.ts";
+import {useDispatch} from "react-redux";
+import {setDeleteTodo, setUpdateTodo} from "../model/todoSlice.ts";
 
 type TTodoItemProps = {
     value: TTodoItem,
@@ -17,8 +18,7 @@ type TTodoItemProps = {
 
 const TodoItem = ( {value, index}:TTodoItemProps)  => {
     const label = {inputProps: {'aria-label': 'Checkbox demo'}};
-    const updateTodo  = useTodosStore((state:TodoState) => state.updateTodo)
-    const deleteTodo = useTodosStore((state:TodoState) => state.deleteTodo)
+    const dispatch = useDispatch()
 
     return (
         <Grid size={2} key={value._id}>
@@ -30,7 +30,7 @@ const TodoItem = ( {value, index}:TTodoItemProps)  => {
                     <Typography gutterBottom sx={{color: 'text.secondary', fontSize: 14}}>
                         <Button>{<ModeEditOutlineIcon/>}</Button>
                         <Button onClick={() => {
-                            deleteTodo(value._id)
+                            dispatch(setDeleteTodo({...value, _id: value._id}))
                         }}>{<DeleteIcon/>}</Button>
                     </Typography>
                     <Typography sx={{color: 'text.secondary', mb: 1.5}}>{value._id}</Typography>
@@ -44,7 +44,7 @@ const TodoItem = ( {value, index}:TTodoItemProps)  => {
                 <CardActions>
                     <div>
                         <Button size="small" onClick={() => {
-                            updateTodo({...value, completed: !value.completed})
+                            dispatch(setUpdateTodo({...value, completed: !value.completed}))
                         }}>{value.completed ? 'Success' : 'Todo'}
                             {<Checkbox {...label} checked={value.completed}/>}</Button>
                     </div>
