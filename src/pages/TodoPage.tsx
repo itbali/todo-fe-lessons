@@ -17,7 +17,10 @@ const TodoPage = () => {
         return <Box sx={{textAlign: 'center'}}><CircularProgress/></Box>
     }
 
-    if (!todo || !params.id) return <div>ToDo not found</div>;
+    if (!todo || !params.id) return <>
+        <Typography variant={'h5'} sx={{textAlign: 'center'}}>ToDo not found</Typography>
+        <Button fullWidth={true} onClick={goBack} variant={'outlined'}>Go back</Button>
+    </>;
 
     return (
         <>

@@ -1,8 +1,8 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-type TUser = {
-    access_token: string, username: string
-    toUpperCase(): string;
+export type TUser = {
+    access_token: string,
+    username?: string
 }
 
 type TUserSlice = {
@@ -24,7 +24,7 @@ export const userSlice = createSlice({
         setIsLoggedIn: (state, action) => {
             state.isLoggedIn = action.payload
         },
-        setUser: (state, action) => {
+        setUser: (state, action: PayloadAction<TUser>) => {
             state.user = action.payload
         },
         logout: (state) => {
