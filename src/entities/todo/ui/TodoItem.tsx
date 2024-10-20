@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {Routes} from "../../../shared/constants/routes.ts";
 import {useSnackbar} from "notistack";
 import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
+import { formatDistanceToNow } from "date-fns";
 
 type TTodoItemProps = {
     value: TTodoItem;
@@ -36,6 +37,9 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const handleTodoClick = () => {
         navigate(Routes.TodoItem + value._id)
     }
+
+    const createDate = new Date(value.createdAt)
+    const updateDate = new Date(value.updatedAt)
 
     useEffect(() => {
         if (deleteInfo.isSuccess) {
@@ -83,8 +87,15 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         }}
                     >
                     </TextField>
-                    <Typography variant="body2" sx={change ? {display: 'none'} : {display: 'block'}}>
+                    <Typography variant="body1" sx={change ? {display: 'none'} : {display: 'block'}}>
                         {value.description}
+                    </Typography>
+                    <br/>
+                    <Typography variant={'body2'}>
+                        Created {formatDistanceToNow(createDate, {addSuffix: true})}
+                    </Typography>
+                    <Typography variant={'body2'}>
+                        Updated {formatDistanceToNow(updateDate, {addSuffix: true})}
                     </Typography>
                     <TextField
                         value={changeDescription}

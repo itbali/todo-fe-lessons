@@ -22,6 +22,9 @@ const TodoPage = () => {
         <Button fullWidth={true} onClick={goBack} variant={'outlined'}>Go back</Button>
     </>;
 
+    const createDate = new Date(todo.createdAt)
+    const updateDate = new Date(todo.updatedAt)
+
     return (
         <>
             <Typography variant={'h3'} sx={{textAlign: 'center'}}>INFO TODO:</Typography>
@@ -29,8 +32,8 @@ const TodoPage = () => {
                 <Typography variant={'body1'}>ID: {JSON.stringify(todo._id)}</Typography>
                 <Typography variant={'h4'}>Title: {JSON.stringify(todo.title)}</Typography>
                 <Typography variant={'h5'}>Description: {JSON.stringify(todo.description)}</Typography>
-                <Typography variant={'body1'}>Created: {JSON.stringify(todo.createdAt)}</Typography>
-                <Typography variant={'body1'}>Update: {JSON.stringify(todo.updatedAt)}</Typography>
+                <Typography variant={'body1'}>Created: {createDate.toLocaleString()}</Typography>
+                <Typography variant={'body1'}>Updated: {updateDate.toLocaleString()}</Typography>
             </Box>
             <Button fullWidth={true} onClick={goBack} variant={'outlined'}>Go back</Button>
         </>
