@@ -1,3 +1,4 @@
+import {useEffect, useState, memo, useMemo} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -8,12 +9,11 @@ import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid2";
 import {TTodoItem} from "../model/todoItem.type.ts";
-import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Routes} from "../../../shared/constants/routes.ts";
 import {useSnackbar} from "notistack";
 import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
-import { formatDistanceToNow } from "date-fns";
+import {formatDistanceToNow} from "date-fns";
 
 type TTodoItemProps = {
     value: TTodoItem;
@@ -38,8 +38,17 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
         navigate(Routes.TodoItem + value._id)
     }
 
-    const createDate = new Date(value.createdAt)
-    const updateDate = new Date(value.updatedAt)
+    // const createDate = new Date(value.createdAt)
+    const createDateFormat = useMemo(() => {
+        const createDate = new Date(value.createdAt)
+        return formatDistanceToNow(createDate, {addSuffix: true})
+    }, [value.createdAt])
+
+    // const updateDate = new Date(value.updatedAt)
+    const updateDateFormat = useMemo(() => {
+        const updateDate = new Date(value.updatedAt)
+        return formatDistanceToNow(updateDate, {addSuffix: true})
+    }, [value.updatedAt])
 
     useEffect(() => {
         if (deleteInfo.isSuccess) {
@@ -92,10 +101,10 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                     </Typography>
                     <br/>
                     <Typography variant={'body2'}>
-                        Created {formatDistanceToNow(createDate, {addSuffix: true})}
+                        Created {createDateFormat}
                     </Typography>
                     <Typography variant={'body2'}>
-                        Updated {formatDistanceToNow(updateDate, {addSuffix: true})}
+                        Updated {updateDateFormat}
                     </Typography>
                     <TextField
                         value={changeDescription}
@@ -146,4 +155,4 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     );
 };
 
-export default TodoItem;
+export default memo(TodoItem);
