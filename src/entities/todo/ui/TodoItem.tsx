@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {Routes} from "../../../shared/constants/routes.ts";
 import {useSnackbar} from "notistack";
 import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
+import { formatDistanceToNow } from "date-fns";
 
 type TTodoItemProps = {
     value: TTodoItem;
@@ -25,9 +26,9 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const navigate = useNavigate()
     const {enqueueSnackbar} = useSnackbar();
 
-    const [deleteTodo, {data, isLoading, isSuccess}] = useDeleteTodosMutation()
-    const [updateTodo] = useUpdateTodosMutation()
-    const [changeTodo] = useChangeTodosMutation()
+    const [deleteTodo, deleteInfo] = useDeleteTodosMutation()
+    const [updateTodo, updateInfo] = useUpdateTodosMutation()
+    const [changeTodo, changeInfo] = useChangeTodosMutation()
 
     const [changeTitle, setChangeTitle] = useState<string>('New Title')
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
@@ -37,13 +38,22 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
         navigate(Routes.TodoItem + value._id)
     }
 
-    useEffect(() => {
-        if (isSuccess) {
-            enqueueSnackbar(`The ToDo ${data.title} has been deleted`, {variant: 'success'})
-        }
-    }, [data?.title, enqueueSnackbar, isSuccess]);
+    const createDate = new Date(value.createdAt)
+    const updateDate = new Date(value.updatedAt)
 
-    if (isLoading) {
+    useEffect(() => {
+        if (deleteInfo.isSuccess) {
+            enqueueSnackbar(`The ToDo ${deleteInfo.data.title} has been deleted`, {variant: 'success'})
+        }
+    }, [deleteInfo.data?.title, enqueueSnackbar, deleteInfo.isSuccess]);
+
+    useEffect(() => {
+        if (changeInfo.isSuccess) {
+            enqueueSnackbar('The ToDo has been changed', {variant: 'success'})
+        }
+    }, [enqueueSnackbar, changeInfo.isSuccess]);
+
+    if (deleteInfo.isLoading) {
         return <CircularProgress/>
     }
 
@@ -77,8 +87,15 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         }}
                     >
                     </TextField>
-                    <Typography variant="body2" sx={change ? {display: 'none'} : {display: 'block'}}>
+                    <Typography variant="body1" sx={change ? {display: 'none'} : {display: 'block'}}>
                         {value.description}
+                    </Typography>
+                    <br/>
+                    <Typography variant={'body2'}>
+                        Created {formatDistanceToNow(createDate, {addSuffix: true})}
+                    </Typography>
+                    <Typography variant={'body2'}>
+                        Updated {formatDistanceToNow(updateDate, {addSuffix: true})}
                     </Typography>
                     <TextField
                         value={changeDescription}
@@ -114,13 +131,13 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                 </CardContent>
                 <CardActions>
                     <div>
-                        <Button disabled={isLoading} size="small" onClick={() => {
+                        <Button disabled={updateInfo.isLoading} size="small" onClick={() => {
                             updateTodo({
                                 id: value._id,
                                 completed: !value.completed,
                             })
                         }}>{value.completed ? 'Success' : 'Todo'}
-                            {<Checkbox {...label} checked={value.completed}/>}</Button>
+                            {<Checkbox {...label} checked={value.completed} disabled={updateInfo.isLoading}/>}</Button>
                     </div>
                 </CardActions>
                 <Button onClick={handleTodoClick} variant={'contained'} fullWidth={true}>More detailed</Button>
