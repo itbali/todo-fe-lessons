@@ -1,19 +1,19 @@
+import {useEffect, useState, memo, useMemo, useCallback} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import {Button, ButtonGroup, CircularProgress, TextField} from "@mui/material";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid2";
 import {TTodoItem} from "../model/todoItem.type.ts";
-import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Routes} from "../../../shared/constants/routes.ts";
 import {useSnackbar} from "notistack";
 import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
-import { formatDistanceToNow } from "date-fns";
+import {formatDistanceToNow} from "date-fns";
+import CustomButton from "../../../shared/ui/kit/CustomButton.tsx";
+import CustomIconButton from "../../../shared/ui/kit/IconButton.tsx";
 
 type TTodoItemProps = {
     value: TTodoItem;
@@ -34,12 +34,35 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
     const [changeDescription, setChangeDescription] = useState<string>('New description...')
     const [change, setChange] = useState<boolean>(false)
 
-    const handleTodoClick = () => {
-        navigate(Routes.TodoItem + value._id)
-    }
+    const handleTodoClick = useCallback(
+        () => {
+            navigate(Routes.TodoItem + value._id)
+        }, [navigate, value._id]
+    )
 
-    const createDate = new Date(value.createdAt)
-    const updateDate = new Date(value.updatedAt)
+    const handleTodoDelete = useCallback(
+        () => {
+            deleteTodo(value._id)
+        }, [deleteTodo, value._id]
+    )
+
+    const handleSetChange = useCallback(
+        () => {
+            setChange(!change)
+        }, [change]
+    )
+
+    // const createDate = new Date(value.createdAt)
+    const createDateFormat = useMemo(() => {
+        const createDate = new Date(value.createdAt)
+        return formatDistanceToNow(createDate, {addSuffix: true})
+    }, [value.createdAt])
+
+    // const updateDate = new Date(value.updatedAt)
+    const updateDateFormat = useMemo(() => {
+        const updateDate = new Date(value.updatedAt)
+        return formatDistanceToNow(updateDate, {addSuffix: true})
+    }, [value.updatedAt])
 
     useEffect(() => {
         if (deleteInfo.isSuccess) {
@@ -65,10 +88,8 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         {index + 1}
                     </Typography>
                     <ButtonGroup fullWidth={true} variant={'text'}>
-                        <Button onClick={() => setChange(!change)}>{<ModeEditOutlineIcon/>}</Button>
-                        <Button onClick={() => {
-                            deleteTodo(value._id)
-                        }}>{<DeleteIcon/>}</Button>
+                        <CustomIconButton iconName={'edit'} onClick={handleSetChange}></CustomIconButton>
+                        <CustomIconButton iconName={'delete'} onClick={handleTodoDelete}></CustomIconButton>
                     </ButtonGroup>
                     <Typography
                         variant="h4"
@@ -92,10 +113,10 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                     </Typography>
                     <br/>
                     <Typography variant={'body2'}>
-                        Created {formatDistanceToNow(createDate, {addSuffix: true})}
+                        Created {createDateFormat}
                     </Typography>
                     <Typography variant={'body2'}>
-                        Updated {formatDistanceToNow(updateDate, {addSuffix: true})}
+                        Updated {updateDateFormat}
                     </Typography>
                     <TextField
                         value={changeDescription}
@@ -140,10 +161,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             {<Checkbox {...label} checked={value.completed} disabled={updateInfo.isLoading}/>}</Button>
                     </div>
                 </CardActions>
-                <Button onClick={handleTodoClick} variant={'contained'} fullWidth={true}>More detailed</Button>
+                {/*<Button onClick={handleTodoClick}>More detailed</Button>*/}
+                <CustomButton onClick={handleTodoClick}>More detailed</CustomButton>
             </Card>
         </Grid>
     );
 };
 
-export default TodoItem;
+export default memo(TodoItem);
