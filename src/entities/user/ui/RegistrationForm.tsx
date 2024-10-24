@@ -18,6 +18,8 @@ const schema = yup
     .object({
         username: yup.string().required(),
         password: yup.string().required().min(6),
+        repeatPassword: yup.string().oneOf([yup.ref('password'), ''], 'passwords don\'t match')
+            .required('repeat the password is a required field'),
     })
     .required()
 
@@ -112,8 +114,39 @@ const RegistrationForm = () => {
                         </Typography>
                     }
                 </FormControl>
+                <FormControl sx={{width: '100%'}} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Repeat the password</InputLabel>
+                    <OutlinedInput
+                        {...register("repeatPassword")}
+                        error={!!errors.repeatPassword}
+                        id="outlined-adornment-password"
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    onMouseUp={handleMouseUpPassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                        label="Password"
+                    />
+                    {!!errors.repeatPassword &&
+                        <Typography
+                            fontSize={'small'}
+                            color={'red'}
+                        >
+                            {errors.repeatPassword?.message}
+                        </Typography>
+                    }
+                </FormControl>
                 <Button
-                    disabled={!!errors.username || !!errors.password || registration}
+                    disabled={!!errors.username || !!errors.password || registration || !!errors.repeatPassword}
                     fullWidth={true}
                     variant="outlined"
                     type={'submit'}
