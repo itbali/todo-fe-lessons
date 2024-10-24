@@ -111,13 +111,6 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                     <Typography variant="body1" sx={change ? {display: 'none'} : {display: 'block'}}>
                         {value.description}
                     </Typography>
-                    <br/>
-                    <Typography variant={'body2'}>
-                        Created {createDateFormat}
-                    </Typography>
-                    <Typography variant={'body2'}>
-                        Updated {updateDateFormat}
-                    </Typography>
                     <TextField
                         value={changeDescription}
                         type={'text'}
@@ -149,6 +142,13 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         >Cancel
                         </Button>
                     </ButtonGroup>
+                    <br/>
+                    <Typography variant={'body2'}>
+                        Created {createDateFormat}
+                    </Typography>
+                    <Typography variant={'body2'}>
+                        Updated {updateDateFormat}
+                    </Typography>
                 </CardContent>
                 <CardActions>
                     <div>
@@ -161,7 +161,6 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                             {<Checkbox {...label} checked={value.completed} disabled={updateInfo.isLoading}/>}</Button>
                     </div>
                 </CardActions>
-                {/*<Button onClick={handleTodoClick}>More detailed</Button>*/}
                 <CustomButton onClick={handleTodoClick}>More detailed</CustomButton>
             </Card>
         </Grid>
