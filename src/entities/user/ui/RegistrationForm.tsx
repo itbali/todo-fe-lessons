@@ -51,6 +51,7 @@ const RegistrationForm = () => {
             const response = await axiosBase.post('auth/register', {username: data.username, password: data.password})
 
             if (response.status === 201 || response.status === 200) {
+                enqueueSnackbar('You have successfully registered', {variant: 'success'})
                 setRegistration(true)
             } else {
                 setRegistration(false)
@@ -65,7 +66,7 @@ const RegistrationForm = () => {
             console.log(response.status)
         } catch (e) {
             console.warn(e)
-            enqueueSnackbar('This user already exists!', {variant: 'error'})
+            enqueueSnackbar('This user already exists', {variant: 'error'})
             setRegistration(false)
         }
     }

@@ -70,7 +70,7 @@ const LoginForm = () => {
             console.log(response.status)
         } catch (e) {
             console.warn(e)
-            enqueueSnackbar('This user does not exist!', {variant: 'error'})
+            enqueueSnackbar('This user does not exist', {variant: 'error'})
             setDisabledButton(false)
         }
     }

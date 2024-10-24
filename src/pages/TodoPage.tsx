@@ -32,6 +32,9 @@ const TodoPage = () => {
                 <Typography variant={'body1'}>ID: {JSON.stringify(todo._id)}</Typography>
                 <Typography variant={'h4'}>Title: {JSON.stringify(todo.title)}</Typography>
                 <Typography variant={'h5'}>Description: {JSON.stringify(todo.description)}</Typography>
+                <Typography variant={'body1'}>
+                    Completed: {todo.completed ? <span>✅</span> : <span>❌</span>}
+                </Typography>
                 <Typography variant={'body1'}>Created: {createDate.toLocaleString()}</Typography>
                 <Typography variant={'body1'}>Updated: {updateDate.toLocaleString()}</Typography>
             </Box>
