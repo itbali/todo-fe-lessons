@@ -11,8 +11,7 @@ export const todosApi = api.injectEndpoints({
             query: (id) => ({
                 url: `/todos/${id}/`,
                 method: 'GET',
-            }),
-            providesTags: ['Todo']
+            })
         }),
         deleteTodos: builder.mutation<TTodoItem, string>({
             query: (id) => ({

@@ -88,8 +88,8 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         {index + 1}
                     </Typography>
                     <ButtonGroup fullWidth={true} variant={'text'}>
-                        <CustomIconButton iconName={'edit'} onClick={handleSetChange}></CustomIconButton>
-                        <CustomIconButton iconName={'delete'} onClick={handleTodoDelete}></CustomIconButton>
+                        <CustomIconButton iconName={'edit'} onClick={handleSetChange}/>
+                        <CustomIconButton iconName={'delete'} onClick={handleTodoDelete}/>
                     </ButtonGroup>
                     <Typography
                         variant="h4"
