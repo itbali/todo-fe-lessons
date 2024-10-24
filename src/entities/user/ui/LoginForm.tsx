@@ -14,6 +14,7 @@ import {setIsLoggedIn, setUser} from "../model/userSlice.ts";
 import {useForm} from "react-hook-form";
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
+import {useSnackbar} from "notistack";
 
 const schema = yup
     .object({
@@ -25,12 +26,12 @@ const schema = yup
 type TFormData = yup.InferType<typeof schema>
 
 const LoginForm = () => {
-    // const [username, setUsername] = useState<string>('')
-    // const [password, setPassword] = useState<string>('')
     const [disabledButton, setDisabledButton] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState(false);
 
+    const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
+
     const {register, handleSubmit, formState: {errors}} = useForm<TFormData>({
         mode: 'onBlur',
         resolver: yupResolver(schema)
@@ -69,14 +70,14 @@ const LoginForm = () => {
             console.log(response.status)
         } catch (e) {
             console.warn(e)
+            enqueueSnackbar('This user does not exist!', {variant: 'error'})
+            setDisabledButton(false)
         }
     }
 
     return (
         <Container maxWidth="sm">
-            <form
-                onSubmit={handleSubmit(checkLogin)}
-            >
+            <form onSubmit={handleSubmit(checkLogin)}>
                 <Typography variant="h4" width={'100%'} textAlign={'center'}>
                     Login
                 </Typography>

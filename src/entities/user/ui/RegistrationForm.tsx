@@ -9,12 +9,25 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import React, {useState} from "react";
 import {axiosBase} from "../../../shared/util/axios.ts";
+import * as yup from "yup";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {useSnackbar} from "notistack";
+
+const schema = yup
+    .object({
+        username: yup.string().required(),
+        password: yup.string().required().min(6),
+    })
+    .required()
+
+type TFormData = yup.InferType<typeof schema>
 
 const RegistrationForm = () => {
-    const [username, setUsername] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
     const [registration, setRegistration] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState(false);
+
+    const {enqueueSnackbar} = useSnackbar()
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,9 +37,16 @@ const RegistrationForm = () => {
         event.preventDefault();
     };
 
-    const checkRegistration = async () => {
+    const {register, handleSubmit, formState: {errors}} = useForm<TFormData>({
+        mode: 'onBlur',
+        resolver: yupResolver(schema)
+    })
+
+    const checkRegistration = async (data: { username: string, password: string }) => {
+        setRegistration(true)
+
         try {
-            const response = await axiosBase.post('auth/register', {username, password})
+            const response = await axiosBase.post('auth/register', {username: data.username, password: data.password})
 
             if (response.status === 201 || response.status === 200) {
                 setRegistration(true)
@@ -43,38 +63,31 @@ const RegistrationForm = () => {
             console.log(response.status)
         } catch (e) {
             console.warn(e)
+            enqueueSnackbar('This user already exists!', {variant: 'error'})
+            setRegistration(false)
         }
     }
 
     return (
         <Container maxWidth="sm">
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    checkRegistration()
-                }}
-            >
+            <form onSubmit={handleSubmit(checkRegistration)}>
                 <Typography variant="h4" width={'100%'} textAlign={'center'}>
                     Sign up
                 </Typography>
                 <TextField
-                    value={username}
-                    name={'username'}
+                    {...register("username")}
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
                     label="Login"
                     fullWidth={true}
-                    onChange={(e) => {
-                        setUsername(e.target.value)
-                    }}/>
+                />
                 <FormControl sx={{width: '100%'}} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput
-                        onChange={(e) => {
-                            setPassword(e.target.value)
-                        }}
+                        {...register("password")}
+                        error={!!errors.password}
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        name={'password'}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -90,12 +103,20 @@ const RegistrationForm = () => {
                         }
                         label="Password"
                     />
+                    {!!errors.password &&
+                        <Typography
+                            fontSize={'small'}
+                            color={'red'}
+                        >
+                            {errors.password?.message}
+                        </Typography>
+                    }
                 </FormControl>
                 <Button
+                    disabled={!!errors.username || !!errors.password || registration}
                     fullWidth={true}
                     variant="outlined"
                     type={'submit'}
-                    disabled={registration}
                 >
                     Registration
                 </Button>

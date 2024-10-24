@@ -52,13 +52,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
         }, [change]
     )
 
-    // const createDate = new Date(value.createdAt)
     const createDateFormat = useMemo(() => {
         const createDate = new Date(value.createdAt)
         return formatDistanceToNow(createDate, {addSuffix: true})
     }, [value.createdAt])
 
-    // const updateDate = new Date(value.updatedAt)
     const updateDateFormat = useMemo(() => {
         const updateDate = new Date(value.updatedAt)
         return formatDistanceToNow(updateDate, {addSuffix: true})
