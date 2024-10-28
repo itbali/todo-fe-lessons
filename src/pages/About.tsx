@@ -1,15 +1,19 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import {useLayoutEffect, useRef} from "react";
+import AboutContent from "../entities/user/ui/AboutContent.tsx";
 
 const About = () => {
+    const titleRef = useRef<HTMLSpanElement | null>(null)
+
+    useLayoutEffect(() => {
+        console.log(titleRef.current?.innerText)
+    }, [])
+
     return (
         <Box>
-            <Typography variant={'h1'}>
-                About
-            </Typography>
-            <Typography variant={'body1'}>
-                This is simple ToDo application
-            </Typography>
+            {/*{isMobile && <Typography>I can see you</Typography>}*/}
+            <AboutContent ref={titleRef} />
         </Box>
     );
 };

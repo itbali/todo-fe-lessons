@@ -82,7 +82,7 @@ const SignUpForm = () => {
     return (
         <Container maxWidth="sm">
             <Typography variant="h4" width={'100%'} textAlign={'center'}>
-                Sign up
+                Login
             </Typography>
             <TextField
                 value={username}
