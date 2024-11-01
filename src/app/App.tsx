@@ -31,43 +31,6 @@ function App() {
                 setAddTodoView(addTodoView ? false : true)
             }}>{<AddIcon/>} Add Todo
             </Button>
-            {addTodoView ?
-                <Container>
-                    <Typography variant="h5" sx={{textAlign: 'center'}}>
-                        Add TODO
-                    </Typography>
-                    <TextField
-                        size={'small'}
-                        value={title}
-                        label='Title'
-                        type={'text'}
-                        fullWidth={true}
-                        onChange={(e) => {
-                            setTitle(e.target.value)
-                        }}/>
-                    <br/>
-                    <TextField
-                        size={'small'}
-                        value={description}
-                        label='Description'
-                        type={'text'}
-                        fullWidth={true}
-                        onChange={(e) => {
-                            setDescription(e.target.value)
-                        }}/>
-                    <br/>
-                    <Button
-                        disabled={isLoading}
-                        fullWidth={true}
-                        variant="outlined"
-                        onClick={() => {
-                            todoSave()
-                        }}
-                    >
-                        Save
-                    </Button>
-                </Container>
-                : undefined}
             <TodoList/>
         </>
     )

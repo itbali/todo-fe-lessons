@@ -1,4 +1,4 @@
-import {useEffect, useState, memo, useMemo, useCallback} from "react";
+import {ChangeEvent, memo} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -7,76 +7,48 @@ import CardActions from "@mui/material/CardActions";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid2";
 import {TTodoItem} from "../model/todoItem.type.ts";
-import {useNavigate} from "react-router-dom";
-import {Routes} from "../../../shared/constants/routes.ts";
-import {useSnackbar} from "notistack";
-import {useChangeTodosMutation, useDeleteTodosMutation, useUpdateTodosMutation} from "../api/todosApi.ts";
-import {formatDistanceToNow} from "date-fns";
 import CustomButton from "../../../shared/ui/kit/CustomButton.tsx";
 import CustomIconButton from "../../../shared/ui/kit/IconButton.tsx";
 
 type TTodoItemProps = {
     value: TTodoItem;
     index: number;
+    label?: { inputProps: { 'aria-label': string } };
+    handleTodoClick: () => void;
+    handleTodoDelete: () => void;
+    handleUpdateTodo: () => void;
+    handleChangeTodo: () => void;
+    change: boolean;
+    handleSetChange: () => void;
+    formatedCreateDate: string;
+    formattedUpdateDate: string;
+    isLoading?: boolean;
+    changedTitle: string;
+    handleChangeTitle: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    changedDescription: string
+    handleChangeDescription: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-const TodoItem = ({value, index}: TTodoItemProps) => {
-    const label = {inputProps: {'aria-label': 'Checkbox demo'}};
+const TodoItem = ({
+                      value,
+                      index,
+                      label,
+                      handleTodoClick,
+                      handleTodoDelete,
+                      handleSetChange,
+                      change,
+                      formatedCreateDate,
+                      formattedUpdateDate,
+                      isLoading,
+                      handleUpdateTodo,
+                      handleChangeTodo,
+                      handleChangeTitle,
+                      changedTitle,
+                      changedDescription,
+                      handleChangeDescription,
+                  }: TTodoItemProps) => {
 
-    const navigate = useNavigate()
-    const {enqueueSnackbar} = useSnackbar();
-
-    const [deleteTodo, deleteInfo] = useDeleteTodosMutation()
-    const [updateTodo, updateInfo] = useUpdateTodosMutation()
-    const [changeTodo, changeInfo] = useChangeTodosMutation()
-
-    const [changeTitle, setChangeTitle] = useState<string>('New Title')
-    const [changeDescription, setChangeDescription] = useState<string>('New description...')
-    const [change, setChange] = useState<boolean>(false)
-
-    const handleTodoClick = useCallback(
-        () => {
-            navigate(Routes.TodoItem + value._id)
-        }, [navigate, value._id]
-    )
-
-    const handleTodoDelete = useCallback(
-        () => {
-            deleteTodo(value._id)
-        }, [deleteTodo, value._id]
-    )
-
-    const handleSetChange = useCallback(
-        () => {
-            setChange(!change)
-        }, [change]
-    )
-
-    // const createDate = new Date(value.createdAt)
-    const createDateFormat = useMemo(() => {
-        const createDate = new Date(value.createdAt)
-        return formatDistanceToNow(createDate, {addSuffix: true})
-    }, [value.createdAt])
-
-    // const updateDate = new Date(value.updatedAt)
-    const updateDateFormat = useMemo(() => {
-        const updateDate = new Date(value.updatedAt)
-        return formatDistanceToNow(updateDate, {addSuffix: true})
-    }, [value.updatedAt])
-
-    useEffect(() => {
-        if (deleteInfo.isSuccess) {
-            enqueueSnackbar(`The ToDo ${deleteInfo.data.title} has been deleted`, {variant: 'success'})
-        }
-    }, [deleteInfo.data?.title, enqueueSnackbar, deleteInfo.isSuccess]);
-
-    useEffect(() => {
-        if (changeInfo.isSuccess) {
-            enqueueSnackbar('The ToDo has been changed', {variant: 'success'})
-        }
-    }, [enqueueSnackbar, changeInfo.isSuccess]);
-
-    if (deleteInfo.isLoading) {
+    if (isLoading) {
         return <CircularProgress/>
     }
 
@@ -99,13 +71,11 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                         {value.title}
                     </Typography>
                     <TextField
-                        value={changeTitle}
+                        value={changedTitle}
                         type={'text'}
                         size={'small'}
                         sx={change ? {display: 'block'} : {display: 'none'}}
-                        onChange={(e) => {
-                            setChangeTitle(e.target.value)
-                        }}
+                        onChange={handleChangeTitle}
                     >
                     </TextField>
                     <Typography variant="body1" sx={change ? {display: 'none'} : {display: 'block'}}>
@@ -113,52 +83,39 @@ const TodoItem = ({value, index}: TTodoItemProps) => {
                     </Typography>
                     <br/>
                     <Typography variant={'body2'}>
-                        Created {createDateFormat}
+                        Created {formatedCreateDate}
                     </Typography>
                     <Typography variant={'body2'}>
-                        Updated {updateDateFormat}
+                        Updated {formattedUpdateDate}
                     </Typography>
                     <TextField
-                        value={changeDescription}
+                        value={changedDescription}
                         type={'text'}
                         size={'small'}
                         sx={change ? {display: 'block'} : {display: 'none'}}
-                        onChange={(e) => {
-                            setChangeDescription(e.target.value)
-                        }}
+                        onChange={handleChangeDescription}
                     >
                     </TextField>
                     <ButtonGroup fullWidth={true}>
                         <Button
                             variant={'outlined'}
                             sx={change ? {display: 'block'} : {display: 'none'}}
-                            onClick={() => {
-                                changeTodo({id: value._id, title: changeTitle, description: changeDescription})
-                                setChangeTitle('New Title')
-                                setChangeDescription('New description...')
-                                setChange(!change)
-                            }}
+                            onClick={handleChangeTodo}
                         >Save
                         </Button>
                         <Button
                             variant={'outlined'}
                             sx={change ? {display: 'block'} : {display: 'none'}}
-                            onClick={() => {
-                                setChange(!change)
-                            }}
+                            onClick={handleSetChange}
                         >Cancel
                         </Button>
                     </ButtonGroup>
                 </CardContent>
                 <CardActions>
                     <div>
-                        <Button disabled={updateInfo.isLoading} size="small" onClick={() => {
-                            updateTodo({
-                                id: value._id,
-                                completed: !value.completed,
-                            })
-                        }}>{value.completed ? 'Success' : 'Todo'}
-                            {<Checkbox {...label} checked={value.completed} disabled={updateInfo.isLoading}/>}</Button>
+                        <Button disabled={isLoading} size="small"
+                                onClick={handleUpdateTodo}>{value.completed ? 'Success' : 'Todo'}
+                            {<Checkbox {...label} checked={value.completed} disabled={isLoading}/>}</Button>
                     </div>
                 </CardActions>
                 {/*<Button onClick={handleTodoClick}>More detailed</Button>*/}

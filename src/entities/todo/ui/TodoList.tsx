@@ -5,6 +5,7 @@ import {CircularProgress} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useSnackbar} from "notistack";
 import {useGetTodosQuery} from "../api/todosApi.ts";
+import TodoItemContainer from "./TodoItemContainer.tsx";
 
 const TodoList = () => {
     const {data, isLoading, error} = useGetTodosQuery()
@@ -25,7 +26,7 @@ const TodoList = () => {
     } else {
         return <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
             {data?.map((value, index) => {
-                return <TodoItem
+                return <TodoItemContainer
                     key={value._id}
                     value={value}
                     index={index}

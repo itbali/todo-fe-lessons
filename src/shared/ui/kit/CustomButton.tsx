@@ -9,7 +9,7 @@ type TCustomButtonProps = {
 const CustomButton = ({children, onClick}: TCustomButtonProps) => {
     return (
         <Button fullWidth={true} variant={'contained'} onClick={onClick}>
-            {children}
+            <span>{children}</span>
         </Button>
     );
 };

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export const useWindowDimensions = ()=>{
+const useWindowDimensions = ()=>{
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const [windowHeight, setWindowHeight] = useState(window.innerHeight)
 
@@ -20,3 +20,5 @@ export const useWindowDimensions = ()=>{
         isMobile: windowWidth<=768
     }
 }
+
+export default useWindowDimensions
