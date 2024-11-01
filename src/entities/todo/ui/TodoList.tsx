@@ -1,5 +1,4 @@
 import Grid from "@mui/material/Grid2";
-import TodoItem from "./TodoItem.tsx";
 import {useEffect} from "react";
 import {CircularProgress} from "@mui/material";
 import Typography from "@mui/material/Typography";

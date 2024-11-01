@@ -6,16 +6,7 @@ import Box from "@mui/material/Box";
 import {formatDistanceToNow} from "date-fns";
 
 const UserInfo = () => {
-    const snicker = {
-        brand: 'Nike',
-        size: '42',
-        type: 'EU'
-    }
-    const fiftySnickers = Array.from({length: 50}, () => snicker)
     const user = useSelector(selectUser)
-    const [selectedBrands, setSelectedBrands] = useState<string[]>([])
-    const [sizeType, setSizeType] = useState<'EU' | 'US' | 'UK'>('EU')
-    const [selectedSize, setSelectedSize] = useState<string>('')
 
     const loggedDate = new Date(1730134058800)
 
